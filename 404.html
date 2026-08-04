@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pythoneer — play this world</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { margin:0; font-family:-apple-system,system-ui,sans-serif; background:#87CEEB;
+           display:flex; min-height:100vh; align-items:center; justify-content:center; }
+    .card { background:#fff; border-radius:20px; padding:32px 28px; max-width:340px; text-align:center;
+            box-shadow:0 10px 40px rgba(0,0,0,.15); }
+    h1 { font-size:22px; margin:8px 0 4px; }
+    p  { color:#555; font-size:15px; line-height:1.4; }
+    a.btn { display:inline-block; margin-top:18px; background:#007AFF; color:#fff; text-decoration:none;
+            font-weight:700; padding:12px 22px; border-radius:12px; }
+    .soon { display:inline-block; margin-top:18px; color:#8a8a8e; font-weight:700;
+            padding:12px 22px; border:1px solid #d1d1d6; border-radius:12px; }
+    .logo { font-size:42px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">🧱</div>
+    <h1>Open in Pythoneer</h1>
+    <p>Someone shared a world with you. Get Pythoneer to play &amp; remix it.</p>
+    <!-- Default is the safe "coming soon" state. The script upgrades it to a real
+         Download button only when a real https:// App Store URL is configured, so
+         a missing/forgotten substitution can never ship a dead link (or no JS). -->
+    <div id="cta"><span class="soon">Coming soon to the App&nbsp;Store</span></div>
+  </div>
+  <script>
+    // The deploy step substitutes the App Store product URL for the token below.
+    // We only render a clickable Download button when the value is a real https://
+    // URL — the placeholder token, an empty string, or anything malformed all fall
+    // through to the "coming soon" state above. See web/check-deploy.sh + LAUNCH.md.
+    var APP_STORE_URL = 'https://apps.apple.com/app/id6754533772';
+    if (/^https:\/\//i.test(APP_STORE_URL)) {
+      var cta = document.getElementById('cta');
+      cta.innerHTML = '<a class="btn" id="store">Download Pythoneer</a>';
+      cta.querySelector('#store').href = APP_STORE_URL;
+    }
+
+    // If the app is installed, the universal link already opened it and this page
+    // never loaded. As a last resort (scheme registered but link not validated),
+    // try the custom scheme so an installed app still receives the shared world.
+    (function () {
+      var parts = location.pathname.split('/').filter(Boolean);   // 404 퍼널 겸용: /w/<id>만 앱으로
+      var id = (parts[0] === 'w' && parts.length > 1) ? parts[parts.length - 1] : null;
+      if (id) { location.href = 'pythoneer://w/' + id; }
+    })();
+  </script>
+</body>
+</html>
