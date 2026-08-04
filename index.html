@@ -35,6 +35,15 @@
   .cta img{height:52px}
   .cta .aside{display:block;margin-top:10px;color:var(--dim);font-size:13px}
 
+  .arcade{padding:56px 0 40px;border-top:1px solid var(--line)}
+  .arcade h2{font-size:22px;margin-bottom:6px}
+  .arcade .hint{color:var(--dim);font-size:14px;margin-bottom:22px}
+  .cabinets{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:640px){.cabinets{grid-template-columns:repeat(2,1fr)}}
+  .cab{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .cab video{display:block;width:100%;aspect-ratio:5/8;object-fit:cover}
+  .cab .t{padding:9px 12px;font-size:13px;color:var(--ink);font-weight:600}
+  .cab .t span{display:block;color:var(--dim);font-weight:400;font-size:12px}
   .moment{padding:56px 0;border-top:1px solid var(--line)}
   .moment .k{color:var(--mint);font-size:12px;letter-spacing:.2em;text-transform:lowercase}
   .moment h2{font-size:clamp(22px,4vw,28px);margin:10px 0 10px;font-weight:700}
@@ -77,8 +86,9 @@
     <div class="tag mono">pythoneer</div>
     <h1>little worlds,<br>made by <em>hand</em>.</h1>
     <p class="lead">drop a few tiles. nudge a number. press play —
-    and something <b>you</b> made is suddenly alive,
-    waiting for your friends to wander in.</p>
+    and something <b>you</b> made is suddenly alive.
+    or just <b>say</b> the game you want, and watch it build itself —
+    then make it yours, tile by tile.</p>
     <div class="cta">
       <a href="https://apps.apple.com/app/id6754533772">
         <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store">
@@ -87,11 +97,34 @@
     </div>
   </header>
 
+  <section class="arcade">
+    <h2>four games ship in the box</h2>
+    <p class="hint">real gameplay, straight from the engine — each one a six-level ladder. beat them, then remix them.</p>
+    <div class="cabinets">
+      <div class="cab"><video src="media/stomp-run.mp4" autoplay muted loop playsinline preload="metadata"></video>
+        <div class="t">Stomp Run<span>jump &amp; stomp</span></div></div>
+      <div class="cab"><video src="media/ghost-maze.mp4" autoplay muted loop playsinline preload="metadata"></video>
+        <div class="t">Ghost Maze<span>keys, doors, levers</span></div></div>
+      <div class="cab"><video src="media/gold-runner.mp4" autoplay muted loop playsinline preload="metadata"></video>
+        <div class="t">Gold Runner<span>dig traps, take gold</span></div></div>
+      <div class="cab"><video src="media/bubble-pop.mp4" autoplay muted loop playsinline preload="metadata"></video>
+        <div class="t">Bubble Pop<span>trap &amp; pop</span></div></div>
+    </div>
+  </section>
+
   <section class="moment">
     <div class="k mono">first —</div>
     <h2>a blank little world, all yours</h2>
     <p>no template gallery, no wizard. a quiet grid and a box of tiles.
     the first thing you place is the first rule of your world.</p>
+  </section>
+
+  <section class="moment">
+    <div class="k mono">or —</div>
+    <h2>say it, and it builds</h2>
+    <p>"a spooky cave with a dragon at the end." the helper lays the tiles,
+    checks the level is actually beatable, and hands you the world —
+    yours to reshape, one tile at a time.</p>
   </section>
 
   <section class="moment">
