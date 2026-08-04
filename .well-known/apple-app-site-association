@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["39P72BL7K9.com.swiftian.Pythoneer"],
+        "components": [
+          { "/": "/w/*", "comment": "world invite links open the app" }
+        ]
+      }
+    ]
+  }
+}

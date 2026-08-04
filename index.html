@@ -185,9 +185,10 @@
 
   <section id="workshop">
     <div class="k mono">from the workshop —</div>
-    <h2>watch it played</h2>
-    <p class="sub">gameplay, devlogs, and new worlds on
-    <a href="https://www.youtube.com/@PythoneerIO"><b>youtube.com/@PythoneerIO</b></a>.</p>
+    <h2>see the machines run</h2>
+    <p class="sub">this page tells you what pythoneer is — the channel shows you, thirty
+    seconds at a time: one game, one gimmick, no commentary.
+    <a href="https://www.youtube.com/@PythoneerIO"><b>youtube.com/@PythoneerIO</b></a></p>
     <div class="video-embed">
       <iframe src="https://www.youtube.com/embed/videoseries?list=UUMP-h1RQTBqrbo2F9mA652g"
         title="Pythoneer videos" allowfullscreen loading="lazy"></iframe>
@@ -195,11 +196,17 @@
   </section>
 
   <footer>
-    made slowly, by one person, at <a href="https://swiftian.com">swiftian</a>.<br>
+    made slowly, by one person.<br>
     <a href="https://www.youtube.com/@PythoneerIO">youtube</a> ·
-    <a href="https://swiftian.com/privacy">privacy</a> ·
-    <a href="https://swiftian.com">support</a> · © 2026
+    <a href="/privacy/">privacy</a> ·
+    <a href="/terms/">community terms</a> ·
+    <a class="email" data-u="hello" data-d="swiftian.com" href="#">support</a> · © 2026
   </footer>
+  <script>
+    document.querySelectorAll('a.email').forEach(function(a){
+      a.href = 'mailto:' + a.dataset.u + String.fromCharCode(64) + a.dataset.d;
+    });
+  </script>
 
 </div>
 </body>
