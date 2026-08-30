@@ -36,7 +36,7 @@
     // We only render a clickable Download button when the value is a real https://
     // URL — the placeholder token, an empty string, or anything malformed all fall
     // through to the "coming soon" state above. See web/check-deploy.sh + LAUNCH.md.
-    var APP_STORE_URL = 'https://apps.apple.com/app/id6754533772';
+    var APP_STORE_URL = 'https://apps.apple.com/app/id6754533772?ct=web-pythoneer';
     if (/^https:\/\//i.test(APP_STORE_URL)) {
       var cta = document.getElementById('cta');
       cta.innerHTML = '<a class="btn" id="store">Download Pythoneer</a>';
