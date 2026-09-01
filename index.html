@@ -1,221 +1,149 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<title>Pythoneer — say it, build it, play it</title>
-<meta name="description" content="A pixel game maker for makers and tinkerers. Four arcade games ship in the box. Say the game you want and the helper builds it — then reshape it tile by tile, and share it with friends.">
-<meta property="og:title" content="Pythoneer — say it, build it, play it">
-<meta property="og:description" content="Four arcade games in the box. Say the game you want — then make it yours, tile by tile.">
-<meta property="og:url" content="https://pythoneer.io">
-<style>
-  :root{
-    --bg:#0b0d14; --panel:#141724; --ink:#eceef6; --dim:#8b93ab;
-    --amber:#ffd23e; --mint:#5ee0a0; --line:#232838;
-  }
-  *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{background:var(--bg);color:var(--ink);font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:hidden}
-  .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace}
-  a{color:inherit}
-
-  /* pixel stars */
-  .sky{position:fixed;inset:0;pointer-events:none;z-index:0}
-  .star{position:absolute;width:3px;height:3px;background:#fff;opacity:.25;animation:tw 4s infinite}
-  @keyframes tw{0%,100%{opacity:.12}50%{opacity:.5}}
-
-  nav{position:sticky;top:0;z-index:5;background:rgba(11,13,20,.86);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-  .nav-in{max-width:960px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:22px}
-  .nav-in .logo{color:var(--amber);font-weight:700;letter-spacing:.18em;font-size:14px;text-decoration:none}
-  .nav-in .links{display:flex;gap:18px;font-size:13px;color:var(--dim);margin-left:auto}
-  .nav-in .links a{text-decoration:none}
-  .nav-in .links a:hover{color:var(--ink)}
-  @media(max-width:560px){.nav-in .links{display:none}}
-
-  .wrap{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:0 24px}
-
-  header{display:grid;grid-template-columns:1.15fr .85fr;gap:36px;align-items:center;padding:88px 0 72px}
-  @media(max-width:760px){header{grid-template-columns:1fr;padding-top:56px}}
-  .tag{color:var(--amber);font-size:13px;letter-spacing:.22em}
-  h1{font-size:clamp(34px,6vw,52px);line-height:1.12;font-weight:800;margin:18px 0 22px;letter-spacing:-.01em}
-  h1 em{font-style:normal;color:var(--amber)}
-  .lead{color:var(--dim);font-size:clamp(16px,2.4vw,19px);max-width:460px}
-  .lead b{color:var(--ink);font-weight:600}
-  .cta{margin-top:36px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-  .cta img{height:52px}
-  .cta .yt{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;
-    padding:12px 18px;font-size:14px;color:var(--dim);text-decoration:none}
-  .cta .yt:hover{color:var(--ink);border-color:var(--dim)}
-  .cta .yt .dot{width:10px;height:10px;border-radius:2px;background:#f33}
-  .hero-video{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--panel);
-    box-shadow:0 24px 80px rgba(0,0,0,.5)}
-  .hero-video video{display:block;width:100%;aspect-ratio:5/8;object-fit:cover}
-
-  section{padding:64px 0;border-top:1px solid var(--line)}
-  .k{color:var(--mint);font-size:12px;letter-spacing:.2em;text-transform:lowercase}
-  h2{font-size:clamp(24px,4vw,30px);margin:10px 0 12px;font-weight:750}
-  .sub{color:var(--dim);max-width:560px}
-
-  .cabinets{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px}
-  @media(max-width:640px){.cabinets{grid-template-columns:repeat(2,1fr)}}
-  .cab{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-  .cab video{display:block;width:100%;aspect-ratio:5/8;object-fit:cover}
-  .cab .t{padding:10px 12px;font-size:13px;font-weight:600}
-  .cab .t span{display:block;color:var(--dim);font-weight:400;font-size:12px}
-
-  .say{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center}
-  @media(max-width:720px){.say{grid-template-columns:1fr}}
-  .chat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;font-size:14px}
-  .chat .u{color:var(--ink);margin-bottom:10px}
-  .chat .u:before{content:"you — ";color:var(--dim)}
-  .chat .a{color:var(--mint)}
-  .chat .a:before{content:"✨ — ";color:var(--dim)}
-  .chat .note{margin-top:12px;color:var(--dim);font-size:12px;border-top:1px solid var(--line);padding-top:10px}
-
-  .code{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:10px;
-    padding:14px 18px;font-size:14px;color:var(--mint);max-width:520px}
-  .code span{color:var(--dim)}
-
-  .video-embed{position:relative;width:100%;padding-top:56.25%;border-radius:14px;overflow:hidden;
-    background:var(--panel);border:1px solid var(--line);margin-top:26px}
-  .video-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-
-  footer{padding:56px 0 72px;color:var(--dim);font-size:13px;line-height:2;border-top:1px solid var(--line)}
-  footer a{color:var(--dim)}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pythoneer — One Tile at a Time</title>
+  <meta name="description" content="One Tile at a Time — a game-making blog from the Pythoneer studio. Each episode, a small game comes to life.">
+  <meta name="theme-color" content="#0b0f1a">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Pythoneer — One Tile at a Time">
+  <meta property="og:description" content="One Tile at a Time — a game-making blog from the Pythoneer studio. Each episode, a small game comes to life.">
+  <meta property="og:url" content="https://pythoneer.io/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0b0f1a;--bg-2:#0e1422;--ink:#eef2ff;--muted:#9aa6c4;--line:rgba(255,255,255,.10);--ac:#4ade80;--ac-soft:rgba(74,222,128,.4)}
+    *{box-sizing:border-box} html,body{margin:0}
+    body{font-family:"Inter",-apple-system,system-ui,sans-serif;color:var(--ink);
+      background:radial-gradient(1100px 660px at 82% -12%, rgba(74,222,128,.13), transparent 60%),
+                 radial-gradient(900px 600px at 0% 8%, rgba(129,140,248,.10), transparent 55%),
+                 linear-gradient(180deg,var(--bg-2),var(--bg));
+      min-height:100vh;-webkit-font-smoothing:antialiased}
+    .wrap{position:relative;z-index:1;width:100%;max-width:760px;margin:0 auto;padding:0 22px}
+    nav{display:flex;align-items:center;gap:11px;padding:26px 0 8px}
+    nav img{width:32px;height:32px;border-radius:8px;display:block}
+    nav .name{font-family:"Space Grotesk";font-weight:700;font-size:18px;flex:1}
+    .lang-toggle{font-size:13px;font-weight:600;color:var(--muted);border:1px solid var(--line);background:none;
+      border-radius:999px;padding:7px 14px;cursor:pointer;font-family:inherit;transition:color .14s,border-color .14s}
+    .lang-toggle:hover{color:var(--ac);border-color:var(--ac-soft)}
+    .lang-toggle.hide{display:none}
+    .kicker{font-family:"Space Grotesk";font-weight:600;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:34px 0 10px}
+    h1{font-family:"Space Grotesk";font-weight:700;font-size:clamp(30px,5.8vw,46px);line-height:1.06;margin:0;letter-spacing:-1px;
+      background:linear-gradient(100deg,#fff 30%,var(--ac) 80%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .intro{color:var(--muted);font-size:clamp(15px,2.3vw,16.5px);line-height:1.65;margin:14px 0 0;max-width:560px}
+    .stage{margin:26px 0 0;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:#000}
+    .stage video{display:block;width:100%;max-height:min(62vh,520px);object-fit:contain;background:#000}
+    .blog{margin:34px 0 0}
+    .blog h2{font-family:"Space Grotesk";font-weight:600;font-size:13px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+    .post{border:1px dashed var(--line);border-radius:16px;padding:18px 20px;color:var(--muted)}
+    .post .p-ep{font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);opacity:.9}
+    .post .p-title{font-family:"Space Grotesk";font-weight:600;font-size:16.5px;color:var(--ink);margin-top:5px}
+    .post .p-note{font-size:13.5px;margin-top:6px;line-height:1.55}
+    .store{display:flex;align-items:center;gap:12px;margin:30px 0 0}
+    .store a{display:block;line-height:0}
+    .store img{width:44px;height:44px;border-radius:11px;border:1px solid rgba(255,255,255,.10);box-shadow:0 4px 12px rgba(0,0,0,.35);transition:transform .13s}
+    .store a:hover img{transform:translateY(-2px)}
+    .store .cap{font-size:10.5px;font-weight:600;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-top:5px;text-align:center}
+    .store .soon{font-size:12px;color:var(--muted);border:1px dashed var(--line);border-radius:999px;padding:6px 13px}
+    .more{margin:46px 0 0;padding-top:22px;border-top:1px solid var(--line)}
+    .more h2{font-family:"Space Grotesk";font-weight:600;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+    .site-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:6px 0;font-size:14px}
+    .site-row a{color:var(--ac);text-decoration:none;font-weight:600;font-family:"Space Grotesk"}
+    .site-row a:hover{text-decoration:underline;text-underline-offset:3px}
+    .site-row .d{color:var(--muted)}
+    footer{position:relative;z-index:1;text-align:center;font-size:13px;padding:42px 22px 32px;color:var(--muted)}
+    footer a{color:var(--ac);text-decoration:none}
+    footer a:hover{text-decoration:underline;text-underline-offset:3px}
+    footer a.mail{display:inline-flex;vertical-align:-3px}
+    footer a.mail svg{width:15px;height:15px}
+    footer .sep{opacity:.35;margin:0 8px}
+  </style>
 </head>
 <body>
+  <div class="wrap">
+    <nav>
+      <img src="/icon-app.png" alt="Pythoneer">
+      <span class="name">Pythoneer</span>
+      <button class="lang-toggle hide" id="langToggle" type="button"></button>
+    </nav>
 
-<div class="sky" aria-hidden="true">
-  <div class="star" style="left:8%;top:12%"></div>
-  <div class="star" style="left:22%;top:34%;animation-delay:1.2s"></div>
-  <div class="star" style="left:37%;top:8%;animation-delay:.6s"></div>
-  <div class="star" style="left:55%;top:22%;animation-delay:2.1s"></div>
-  <div class="star" style="left:71%;top:11%;animation-delay:1.7s"></div>
-  <div class="star" style="left:86%;top:30%;animation-delay:.3s"></div>
-  <div class="star" style="left:64%;top:48%;animation-delay:2.8s"></div>
-  <div class="star" style="left:14%;top:58%;animation-delay:1.9s"></div>
-  <div class="star" style="left:91%;top:64%;animation-delay:.9s"></div>
-  <div class="star" style="left:44%;top:72%;animation-delay:2.4s"></div>
-</div>
+    <p class="kicker" data-t="kicker">A blog from the Pythoneer studio</p>
+    <h1>One Tile at a Time</h1>
+    <p class="intro" data-t="intro">Each episode, a small game comes to life — a few tiles, one rule, a play button. Watch it grow from an empty map to something you can actually play.</p>
 
-<nav>
-  <div class="nav-in">
-    <a class="logo mono" href="#">PYTHONEER</a>
-    <div class="links mono">
-      <a href="#games">games</a>
-      <a href="#builder">builder</a>
-      <a href="#script">script</a>
-      <a href="#workshop">workshop</a>
-      <a href="https://www.youtube.com/@PythoneerIO">youtube</a>
-    </div>
+    <div class="stage"><video src="/media/crystal-mine-v2.mp4" autoplay muted loop playsinline preload="metadata"></video></div>
+
+    <section class="blog">
+      <h2>Vol. 1</h2>
+      <div class="post">
+        <div class="p-ep">E1</div>
+        <div class="p-title" data-t="ep1t">One empty tile map</div>
+        <div class="p-note" data-t="ep1n">Episode 1 starts where every game starts: nothing but a grid. It will land here soon.</div>
+      </div>
+    </section>
+
+    <div class="store"><div><a href="https://apps.apple.com/app/id6754533772?ct=web-pythoneer" target="_blank" rel="noopener" aria-label="Pythoneer on the App Store"><img src="/icon-app.png" alt="Pythoneer"></a><div class="cap">App Store</div></div></div>
+
+    <section class="more">
+      <h2 data-t="moreTitle">More from us</h2>
+      <div class="site-row"><a href="https://swiftian.com">swiftian.com</a> <span class="d" data-t="swDesc">chillfriends comics, read aloud</span></div>
+      <div class="site-row"><a href="https://iflipbook.com">iflipbook.com</a> <span class="d" data-t="ifDesc">otto's flipbook diary</span></div>
+      <div class="site-row"><a href="https://coordigo.com">coordigo.com</a> <span class="d" data-t="coDesc">coordinate postcards</span></div>
+    </section>
   </div>
-</nav>
-
-<div class="wrap">
-
-  <header>
-    <div>
-      <div class="tag mono">pixel game maker · iPhone &amp; iPad</div>
-      <h1>say it.<br>build it.<br><em>play it.</em></h1>
-      <p class="lead">describe the game you want and the ✨ helper lays the tiles —
-      checked, beatable, ready to play. then <b>make it yours</b>:
-      repaint a block, rewrite a rule, stack six levels, and hand it to a friend.</p>
-      <div class="cta">
-        <a href="https://apps.apple.com/app/id6754533772?ct=web-pythoneer">
-          <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store">
-        </a>
-        <a class="yt" href="https://www.youtube.com/@PythoneerIO"><span class="dot"></span> watch on YouTube</a>
-      </div>
-    </div>
-    <div class="hero-video">
-      <video src="media/crystal-mine-v2.mp4" autoplay muted loop playsinline preload="metadata"></video>
-    </div>
-  </header>
-
-  <section id="games">
-    <div class="k mono">in the box —</div>
-    <h2>four arcade games, six levels each</h2>
-    <p class="sub">real gameplay, straight from the engine. every level is machine-verified as beatable
-    before it ships. finish them — then open any level in the editor and bend it.</p>
-    <div class="cabinets">
-      <div class="cab"><video src="media/stomp-run.mp4" autoplay muted loop playsinline preload="metadata"></video>
-        <div class="t">Stomp Run<span>jump &amp; stomp</span></div></div>
-      <div class="cab"><video src="media/ghost-maze.mp4" autoplay muted loop playsinline preload="metadata"></video>
-        <div class="t">Ghost Maze<span>keys, doors, levers</span></div></div>
-      <div class="cab"><video src="media/gold-runner.mp4" autoplay muted loop playsinline preload="metadata"></video>
-        <div class="t">Gold Runner<span>dig traps, take gold</span></div></div>
-      <div class="cab"><video src="media/bubble-pop.mp4" autoplay muted loop playsinline preload="metadata"></video>
-        <div class="t">Bubble Pop<span>trap &amp; pop</span></div></div>
-    </div>
-  </section>
-
-  <section id="builder">
-    <div class="say">
-      <div>
-        <div class="k mono">the helper —</div>
-        <h2>say it, and it builds</h2>
-        <p class="sub">the ✨ helper speaks your language — eight of them, actually.
-        it lays the tiles, wires the rules, and a referee checks the level is
-        actually winnable before you ever see it. no dead ends, no broken toys.</p>
-      </div>
-      <div class="chat mono">
-        <div class="u">a spooky cave where a dragon guards the treasure</div>
-        <div class="a">built it! bats patrol the dark, spikes guard the gold, and the exit hides behind the hoard. try it —</div>
-        <div class="note">every generated level is auto-verified: reachable exit, fair traps, ladders that land flush.</div>
-      </div>
-    </div>
-  </section>
-
-  <section id="script">
-    <div class="k mono">under the hood —</div>
-    <h2>break it, gently</h2>
-    <p class="sub">every world runs on <b>pythoneer script</b> — a tiny language that thinks like python.
-    change one number and watch everything tilt. build enough worlds, and one day
-    you'll read the real thing like it was always yours.</p>
-    <div class="code mono">jump = 3 &nbsp;<span>→</span>&nbsp; jump = 30 &nbsp;<span>// oh no. oh yes.</span></div>
-  </section>
-
-  <section>
-    <div class="k mono">then —</div>
-    <h2>let them in</h2>
-    <p class="sub">share your world to Discover. a friend plays it, likes it, remixes it,
-    and sends back something you don't quite recognize — your world, wearing their ideas.</p>
-  </section>
-
-  <section id="workshop">
-    <div class="k mono">from the workshop —</div>
-    <h2>see the machines run</h2>
-    <p class="sub">this page tells you what pythoneer is — the channel shows you, thirty
-    seconds at a time: one game, one gimmick, no commentary.
-    <a href="https://www.youtube.com/@PythoneerIO"><b>youtube.com/@PythoneerIO</b></a></p>
-    <div class="video-embed">
-      <iframe src="https://www.youtube.com/embed/videoseries?list=UUMP-h1RQTBqrbo2F9mA652g"
-        title="Pythoneer videos" allowfullscreen loading="lazy"></iframe>
-    </div>
-  </section>
 
   <footer>
-    made slowly, by one person.<br>
-    <a href="https://www.youtube.com/@PythoneerIO">youtube</a> ·
-    <a href="/privacy/">privacy</a> ·
-    <a href="/terms/">community terms</a> ·
-    <a class="email" data-u="hello" data-d="swiftian.com" href="#">support</a> · © 2026<br>
-    blog — coming soon<br>
-    sites: <a href="https://swiftian.com">swiftian</a> · <a href="https://iflipbook.com">iflipbook</a> · <a href="https://coordigo.com">coordigo</a>
+    <span>&copy; 2026 Pythoneer &middot; <a href='https://swiftian.com'>Swiftian Inc.</a></span>
+    <span class="sep">&middot;</span><a href="https://www.youtube.com/@PythoneerIO">YouTube</a><span class="sep">&middot;</span><a href="/terms/">Terms</a><span class="sep">&middot;</span><a href="/privacy/" data-t="privacy">Privacy</a>
+    <span class="sep">&middot;</span>
+    <a class="mail email" data-u="hello" data-d="swiftian.com" href="#" aria-label="Email us" title="Email us">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>
+    </a>
   </footer>
-  <script>
-    document.querySelectorAll('a.email').forEach(function(a){
-      a.href = 'mailto:' + a.dataset.u + String.fromCharCode(64) + a.dataset.d;
-    });
-  </script>
 
-</div>
-<!-- Cloudflare Web Analytics — 프록시 없이 도는 비콘. 쿠키도, 개인 식별도 없다. --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "700711703b78414e9a5b9fd4ec5ba89a"}'></script>
-<!-- 앱스토어 클릭 계측 — ct= 는 설치를 가르지만 클릭은 못 센다. 둘을 같이 봐야 이탈이 보인다.
-     식별자는 세션마다 새로 만드는 난수다. 쿠키도, IP 저장도, 개인 식별도 없다. -->
+  <script>
+  var I18N = {"ko": {"name": "한국어", "kicker": "Pythoneer 스튜디오의 블로그", "intro": "매화 작은 게임 하나가 태어납니다 — 타일 몇 개, 규칙 하나, 플레이 버튼. 빈 맵이 진짜 플레이할 수 있는 게임이 되는 과정을 지켜보세요.", "ep1t": "빈 타일 맵 하나", "ep1n": "1화는 모든 게임이 시작되는 곳에서 시작합니다: 격자뿐인 화면. 곧 여기 올라옵니다.", "moreTitle": "우리가 만드는 것들", "privacy": "개인정보 처리방침", "swDesc": "칠프렌즈 코믹스, 낭독 연재", "ifDesc": "오토의 플립북 일기", "coDesc": "좌표 엽서"}, "ja": {"name": "日本語", "kicker": "Pythoneer スタジオのブログ", "intro": "毎話、小さなゲームがひとつ生まれます — タイル数枚、ルールひとつ、再生ボタン。空っぽのマップが遊べるゲームになるまでを見届けてください。", "ep1t": "からっぽのタイルマップ", "ep1n": "第1話は、すべてのゲームが始まる場所から。まもなくここに載ります。", "moreTitle": "私たちの作品", "privacy": "プライバシー", "swDesc": "チルフレンズ・コミックス朗読連載", "ifDesc": "オットーのパラパラ日記", "coDesc": "座標のポストカード"}, "zh-Hans": {"name": "简体中文", "kicker": "来自 Pythoneer 工作室的博客", "intro": "每一集，一个小游戏诞生——几块瓷砖，一条规则，一个播放键。看它从一张空地图长成真正能玩的游戏。", "ep1t": "一张空空的瓷砖地图", "ep1n": "第一集从所有游戏开始的地方开始：只有网格。很快就会出现在这里。", "moreTitle": "我们的作品", "privacy": "隐私政策", "swDesc": "Chillfriends 漫画朗读连载", "ifDesc": "Otto 的翻页日记", "coDesc": "坐标明信片"}, "zh-Hant": {"name": "繁體中文", "kicker": "來自 Pythoneer 工作室的部落格", "intro": "每一集,一個小遊戲誕生——幾塊瓷磚,一條規則,一個播放鍵。看它從一張空地圖長成真正能玩的遊戲。", "ep1t": "一張空空的瓷磚地圖", "ep1n": "第一集從所有遊戲開始的地方開始:只有網格。很快就會出現在這裡。", "moreTitle": "我們的作品", "privacy": "隱私權政策", "swDesc": "Chillfriends 漫畫朗讀連載", "ifDesc": "Otto 的翻頁日記", "coDesc": "座標明信片"}, "es": {"name": "Español", "kicker": "Un blog del estudio Pythoneer", "intro": "En cada episodio nace un pequeño juego: unas casillas, una regla, un botón de jugar. Míralo crecer de un mapa vacío a algo que de verdad se puede jugar.", "ep1t": "Un mapa de casillas vacío", "ep1n": "El episodio 1 empieza donde empiezan todos los juegos: solo una cuadrícula. Pronto estará aquí.", "moreTitle": "Más de nosotros", "privacy": "Privacidad", "swDesc": "cómics de Chillfriends, leídos en voz alta", "ifDesc": "el diario de flipbook de Otto", "coDesc": "postales de coordenadas"}, "fr": {"name": "Français", "kicker": "Un blog du studio Pythoneer", "intro": "À chaque épisode, un petit jeu prend vie — quelques tuiles, une règle, un bouton play. Regardez-le passer d'une carte vide à un vrai jeu jouable.", "ep1t": "Une carte de tuiles vide", "ep1n": "L'épisode 1 commence là où commencent tous les jeux : une simple grille. Bientôt ici.", "moreTitle": "Nos créations", "privacy": "Confidentialité", "swDesc": "les BD Chillfriends, lues à voix haute", "ifDesc": "le journal flipbook d'Otto", "coDesc": "cartes postales de coordonnées"}, "de": {"name": "Deutsch", "kicker": "Ein Blog aus dem Pythoneer-Studio", "intro": "In jeder Folge entsteht ein kleines Spiel — ein paar Kacheln, eine Regel, ein Play-Button. Sieh zu, wie aus einer leeren Karte etwas wird, das man wirklich spielen kann.", "ep1t": "Eine leere Kachelkarte", "ep1n": "Folge 1 beginnt, wo jedes Spiel beginnt: mit nichts als einem Raster. Bald hier.", "moreTitle": "Mehr von uns", "privacy": "Datenschutz", "swDesc": "Chillfriends-Comics, vorgelesen", "ifDesc": "Ottos Daumenkino-Tagebuch", "coDesc": "Koordinaten-Postkarten"}, "pt": {"name": "Português", "kicker": "Um blog do estúdio Pythoneer", "intro": "A cada episódio, um pequeno jogo ganha vida — alguns blocos, uma regra, um botão de jogar. Veja-o crescer de um mapa vazio até algo que dá para jogar de verdade.", "ep1t": "Um mapa de blocos vazio", "ep1n": "O episódio 1 começa onde todo jogo começa: só uma grade. Em breve por aqui.", "moreTitle": "Mais do estúdio", "privacy": "Privacidade", "swDesc": "quadrinhos Chillfriends, lidos em voz alta", "ifDesc": "o diário de flipbook do Otto", "coDesc": "cartões-postais de coordenadas"}, "ru": {"name": "Русский", "kicker": "Блог студии Pythoneer", "intro": "В каждом выпуске рождается маленькая игра — несколько плиток, одно правило, кнопка «играть». Смотрите, как пустая карта становится игрой, в которую правда можно играть.", "ep1t": "Одна пустая карта из плиток", "ep1n": "Выпуск 1 начинается там же, где начинается любая игра: с пустой сетки. Скоро здесь.", "moreTitle": "Ещё от нас", "privacy": "Конфиденциальность", "swDesc": "комиксы Chillfriends, озвученные вслух", "ifDesc": "флипбук-дневник Отто", "coDesc": "координатные открытки"}};
+  var EN = {"kicker": "A blog from the Pythoneer studio", "intro": "Each episode, a small game comes to life — a few tiles, one rule, a play button. Watch it grow from an empty map to something you can actually play.", "ep1t": "One empty tile map", "ep1n": "Episode 1 starts where every game starts: nothing but a grid. It will land here soon.", "moreTitle": "More from us", "privacy": "Privacy", "swDesc": "chillfriends comics, read aloud", "ifDesc": "otto's flipbook diary", "coDesc": "coordinate postcards"};
+  function detect(){
+    var langs = navigator.languages || [navigator.language || "en"];
+    for (var i=0;i<langs.length;i++){
+      var l = langs[i], two = l.slice(0,2).toLowerCase();
+      if (two === "en") return "en";
+      if (/^zh\b/.test(l)) return /tw|hk|mo|hant/i.test(l) ? "zh-Hant" : "zh-Hans";
+      if (I18N[two]) return two;
+    }
+    return "en";
+  }
+  var local = detect(), cur;
+  try { cur = localStorage.getItem("site_lang"); } catch(_){}
+  if (cur !== "en" && cur !== local) cur = local;
+  function apply(lang){
+    cur = lang;
+    try { localStorage.setItem("site_lang", lang); } catch(_){}
+    var d = (lang === "en" || !I18N[lang]) ? EN : I18N[lang];
+    document.querySelectorAll("[data-t]").forEach(function(el){
+      var k = el.getAttribute("data-t");
+      if (d[k]) el.textContent = d[k];
+    });
+    document.documentElement.lang = lang;
+    var btn = document.getElementById("langToggle");
+    if (local === "en"){ btn.classList.add("hide"); }
+    else {
+      btn.classList.remove("hide");
+      btn.textContent = (lang === "en") ? I18N[local].name : "English";
+    }
+  }
+  document.getElementById("langToggle").addEventListener("click", function(){ apply(cur === "en" ? local : "en"); });
+  apply(cur);
+  document.querySelectorAll('a.email').forEach(function(a){
+    a.href = 'mailto:' + a.dataset.u + String.fromCharCode(64) + a.dataset.d;
+  });
+  </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "700711703b78414e9a5b9fd4ec5ba89a"}'></script>
 <script>
 (function () {
   var SITE = "pythoneer.io";
@@ -232,16 +160,12 @@
     var m = a.href.match(/id(\d+)/);
     try {
       fetch("https://claude-proxy-web.ilbulyori.workers.dev/events", {
-        method: "POST",
-        keepalive: true,
+        method: "POST", keepalive: true,
         headers: { "content-type": "application/json", "x-device-id": sid() },
         body: JSON.stringify({
           meta: { app: SITE, build: "web", os: "web", locale: (navigator.language || "").slice(0, 8) },
-          events: [{
-            name: "appstore_click",
-            ts: Date.now() / 1000,
-            props: { site: SITE, app: m ? m[1] : "", path: location.pathname.slice(0, 64) }
-          }]
+          events: [{ name: "appstore_click", ts: Date.now() / 1000,
+            props: { site: SITE, app: m ? m[1] : "", path: location.pathname.slice(0, 64) } }]
         })
       }).catch(function () {});
     } catch (_) {}
