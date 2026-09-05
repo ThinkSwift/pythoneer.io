@@ -3,18 +3,35 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pythoneer — One Tile at a Time</title>
-  <meta name="description" content="One Tile at a Time — a game-making blog from the Pythoneer studio. Each episode, a small game comes to life.">
+  <title>Pythoneer: Make Your Own Game — One Tile at a Time</title>
+  <meta name="description" content="Pythoneer is one world with 38 small arcade games buried in it. Dig one up, beat it, carry the reward back out — then make your own game on a readable Python-style script and bury it for a friend. Free to start on iPhone and iPad.">
   <meta name="theme-color" content="#0b0f1a">
+  <link rel="canonical" href="https://pythoneer.io/">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="apple-itunes-app" content="app-id=6754533772">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Pythoneer — One Tile at a Time">
-  <meta property="og:description" content="One Tile at a Time — a game-making blog from the Pythoneer studio. Each episode, a small game comes to life.">
+  <meta property="og:site_name" content="Pythoneer">
+  <meta property="og:title" content="Pythoneer — 38 games buried in one world">
+  <meta property="og:description" content="Dig one up, beat it, carry the reward back out. Then make your own and bury it for a friend. One Tile at a Time is the blog that digs them up, one episode each.">
   <meta property="og:url" content="https://pythoneer.io/">
+  <meta property="og:image" content="https://pythoneer.io/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[
+    {"@type":"WebSite","name":"Pythoneer","url":"https://pythoneer.io/","publisher":{"@type":"Organization","name":"Swiftian Inc.","url":"https://swiftian.com/"}},
+    {"@type":"SoftwareApplication","name":"Pythoneer: Make Your Own Game","operatingSystem":"iOS, iPadOS","applicationCategory":"GameApplication",
+     "url":"https://apps.apple.com/app/id6754533772","image":"https://pythoneer.io/icon-app.png",
+     "description":"One world with 38 small arcade games buried in it. Dig one up, beat it, and the reward comes back out with you. Then make your own game on a readable Python-style script and share it into a friend's world.",
+     "author":{"@type":"Organization","name":"Swiftian Inc.","url":"https://swiftian.com/"},
+     "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+  ]}
+  </script>
   <style>
     :root{--bg:#0b0f1a;--bg-2:#0e1422;--ink:#eef2ff;--muted:#9aa6c4;--line:rgba(255,255,255,.10);--ac:#4ade80;--ac-soft:rgba(74,222,128,.4)}
     *{box-sizing:border-box} html,body{margin:0}
@@ -34,21 +51,49 @@
     .kicker{font-family:"Space Grotesk";font-weight:600;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:34px 0 10px}
     h1{font-family:"Space Grotesk";font-weight:700;font-size:clamp(30px,5.8vw,46px);line-height:1.06;margin:0;letter-spacing:-1px;
       background:linear-gradient(100deg,#fff 30%,var(--ac) 80%);-webkit-background-clip:text;background-clip:text;color:transparent}
-    .intro{color:var(--muted);font-size:clamp(15px,2.3vw,16.5px);line-height:1.65;margin:14px 0 0;max-width:560px}
-    .stage{margin:26px 0 0;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:#000}
-    .stage video{display:block;width:100%;max-height:min(62vh,520px);object-fit:contain;background:#000}
-    .blog{margin:34px 0 0}
-    .blog h2{font-family:"Space Grotesk";font-weight:600;font-size:13px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
-    .post{border:1px dashed var(--line);border-radius:16px;padding:18px 20px;color:var(--muted)}
-    .post .p-ep{font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);opacity:.9}
-    .post .p-title{font-family:"Space Grotesk";font-weight:600;font-size:16.5px;color:var(--ink);margin-top:5px}
-    .post .p-note{font-size:13.5px;margin-top:6px;line-height:1.55}
-    .store{display:flex;align-items:center;gap:12px;margin:30px 0 0}
+    .intro{color:var(--muted);font-size:clamp(15px,2.3vw,16.5px);line-height:1.65;margin:14px 0 0;max-width:600px}
+    .intro b{color:var(--ink);font-weight:600}
+
+    /* ── 플레이어: 지금 파낸 게임 + 앱 아이콘 ── */
+    .stage{margin:26px 0 0;border:1px solid var(--line);border-radius:20px;overflow:hidden;
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02))}
+    .video-box{background:#000;display:flex;justify-content:center}
+    .video-box video{display:block;width:100%;max-height:min(62vh,520px);object-fit:contain;background:#000}
+    .bar{display:flex;align-items:center;gap:16px;padding:14px 18px;border-top:1px solid var(--line)}
+    .now{flex:1;min-width:0}
+    .now .n-ep{font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ac)}
+    .now .n-title{font-family:"Space Grotesk";font-weight:600;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .now .n-note{font-size:13px;color:var(--muted);margin-top:3px;line-height:1.5}
+    .store{flex:none;text-align:center}
     .store a{display:block;line-height:0}
     .store img{width:44px;height:44px;border-radius:11px;border:1px solid rgba(255,255,255,.10);box-shadow:0 4px 12px rgba(0,0,0,.35);transition:transform .13s}
     .store a:hover img{transform:translateY(-2px)}
-    .store .cap{font-size:10.5px;font-weight:600;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-top:5px;text-align:center}
-    .store .soon{font-size:12px;color:var(--muted);border:1px dashed var(--line);border-radius:999px;padding:6px 13px}
+    .store .cap{font-size:10.5px;font-weight:600;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-top:5px}
+    .free{font-size:12.5px;color:var(--muted);margin:10px 2px 0}
+
+    /* ── 에피소드 레일 ── */
+    .vol{margin:30px 0 0}
+    .vol h2{font-family:"Space Grotesk";font-weight:600;font-size:13px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+    .rail{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x proximity;padding:2px 2px 12px;
+      scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.15) transparent}
+    .rail::-webkit-scrollbar{height:6px}
+    .rail::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:3px}
+    .ep{scroll-snap-align:start;flex:0 0 auto;width:176px;text-align:left;cursor:pointer;font-family:inherit;color:inherit;
+      background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:15px;padding:13px 14px;
+      transition:border-color .13s,transform .13s}
+    .ep:hover{transform:translateY(-2px);border-color:var(--ac-soft)}
+    .ep.on{border-color:rgba(74,222,128,.6);background:rgba(74,222,128,.08)}
+    .ep .e-num{font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+    .ep.on .e-num{color:var(--ac)}
+    .ep .e-title{font-family:"Space Grotesk";font-weight:600;font-size:14.5px;line-height:1.35;margin-top:5px}
+    .ep .e-where{font-size:12px;color:var(--muted);margin-top:4px}
+
+    /* ── 새 버전 한 줄 ── */
+    .new{margin:34px 0 0;padding:16px 18px;border:1px solid var(--line);border-radius:16px;display:flex;gap:14px;align-items:flex-start}
+    .new .tag{flex:none;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);border:1px solid var(--ac-soft);border-radius:999px;padding:4px 9px;margin-top:2px}
+    .new p{margin:0;font-size:14px;line-height:1.6;color:var(--muted)}
+    .new p b{color:var(--ink);font-weight:600}
+
     .more{margin:46px 0 0;padding-top:22px;border-top:1px solid var(--line)}
     .more h2{font-family:"Space Grotesk";font-weight:600;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
     .site-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:6px 0;font-size:14px}
@@ -61,6 +106,7 @@
     footer a.mail{display:inline-flex;vertical-align:-3px}
     footer a.mail svg{width:15px;height:15px}
     footer .sep{opacity:.35;margin:0 8px}
+    @media (max-width:560px){ .bar{flex-wrap:wrap} .ep{width:156px} }
   </style>
 </head>
 <body>
@@ -71,22 +117,35 @@
       <button class="lang-toggle hide" id="langToggle" type="button"></button>
     </nav>
 
-    <p class="kicker" data-t="kicker">A blog from the Pythoneer studio</p>
+    <p class="kicker" data-t="kicker">Pythoneer · a dig-and-build world with 38 games inside</p>
     <h1>One Tile at a Time</h1>
-    <p class="intro" data-t="intro">Each episode, a small game comes to life — a few tiles, one rule, a play button. Watch it grow from an empty map to something you can actually play.</p>
+    <p class="intro" data-t="intro">Pythoneer is one big world with thirty-eight small arcade games buried in it. Dig one up, beat it, and what you won comes back out with you — a deeper pickaxe, a lantern, a block to build with. Then make your own and bury it for a friend. This blog digs them up, one episode at a time.</p>
 
-    <div class="stage"><video src="/media/crystal-mine-v2.mp4" autoplay muted loop playsinline preload="metadata"></video></div>
-
-    <section class="blog">
-      <h2>Vol. 1</h2>
-      <div class="post">
-        <div class="p-ep">E1</div>
-        <div class="p-title" data-t="ep1t">One empty tile map</div>
-        <div class="p-note" data-t="ep1n">Episode 1 starts where every game starts: nothing but a grid. It will land here soon.</div>
+    <div class="stage">
+      <div class="video-box"><video id="player" autoplay muted loop playsinline preload="metadata"></video></div>
+      <div class="bar">
+        <div class="now">
+          <div class="n-ep" id="nowEp">E1 · Vol. 1</div>
+          <div class="n-title" id="nowTitle">Bubble Pop</div>
+          <div class="n-note" id="nowNote" data-t="e1n"></div>
+        </div>
+        <div class="store">
+          <a href="https://apps.apple.com/app/id6754533772?ct=web-pythoneer" target="_blank" rel="noopener" aria-label="Pythoneer on the App Store"><img src="/icon-app.png" alt="Pythoneer"></a>
+          <div class="cap">App Store</div>
+        </div>
       </div>
+    </div>
+    <p class="free" data-t="free">Free to start on iPhone and iPad — the surface, the shallow mine and the sky islands hold 22 of the 38 games. One purchase opens the sealed layers below.</p>
+
+    <section class="vol">
+      <h2 data-t="vol1">Vol. 1 · five of the thirty-eight</h2>
+      <div class="rail" id="rail"></div>
     </section>
 
-    <div class="store"><div><a href="https://apps.apple.com/app/id6754533772?ct=web-pythoneer" target="_blank" rel="noopener" aria-label="Pythoneer on the App Store"><img src="/icon-app.png" alt="Pythoneer"></a><div class="cap">App Store</div></div></div>
+    <section class="new">
+      <span class="tag" data-t="newTag">Now live</span>
+      <p data-t="newNote"><b>Version 3.0 is on the App Store.</b> One world to keep, thirty-eight games to dig up, rewards that come back out with you — and a game you make lands buried in your friend's world, not in a list.</p>
+    </section>
 
     <section class="more">
       <h2 data-t="moreTitle">More from us</h2>
@@ -106,8 +165,168 @@
   </footer>
 
   <script>
-  var I18N = {"ko": {"name": "한국어", "kicker": "Pythoneer 스튜디오의 블로그", "intro": "매화 작은 게임 하나가 태어납니다 — 타일 몇 개, 규칙 하나, 플레이 버튼. 빈 맵이 진짜 플레이할 수 있는 게임이 되는 과정을 지켜보세요.", "ep1t": "빈 타일 맵 하나", "ep1n": "1화는 모든 게임이 시작되는 곳에서 시작합니다: 격자뿐인 화면. 곧 여기 올라옵니다.", "moreTitle": "우리가 만드는 것들", "privacy": "개인정보 처리방침", "swDesc": "칠프렌즈 코믹스, 낭독 연재", "ifDesc": "오토의 플립북 일기", "coDesc": "좌표 엽서"}, "ja": {"name": "日本語", "kicker": "Pythoneer スタジオのブログ", "intro": "毎話、小さなゲームがひとつ生まれます — タイル数枚、ルールひとつ、再生ボタン。空っぽのマップが遊べるゲームになるまでを見届けてください。", "ep1t": "からっぽのタイルマップ", "ep1n": "第1話は、すべてのゲームが始まる場所から。まもなくここに載ります。", "moreTitle": "私たちの作品", "privacy": "プライバシー", "swDesc": "チルフレンズ・コミックス朗読連載", "ifDesc": "オットーのパラパラ日記", "coDesc": "座標のポストカード"}, "zh-Hans": {"name": "简体中文", "kicker": "来自 Pythoneer 工作室的博客", "intro": "每一集，一个小游戏诞生——几块瓷砖，一条规则，一个播放键。看它从一张空地图长成真正能玩的游戏。", "ep1t": "一张空空的瓷砖地图", "ep1n": "第一集从所有游戏开始的地方开始：只有网格。很快就会出现在这里。", "moreTitle": "我们的作品", "privacy": "隐私政策", "swDesc": "Chillfriends 漫画朗读连载", "ifDesc": "Otto 的翻页日记", "coDesc": "坐标明信片"}, "zh-Hant": {"name": "繁體中文", "kicker": "來自 Pythoneer 工作室的部落格", "intro": "每一集,一個小遊戲誕生——幾塊瓷磚,一條規則,一個播放鍵。看它從一張空地圖長成真正能玩的遊戲。", "ep1t": "一張空空的瓷磚地圖", "ep1n": "第一集從所有遊戲開始的地方開始:只有網格。很快就會出現在這裡。", "moreTitle": "我們的作品", "privacy": "隱私權政策", "swDesc": "Chillfriends 漫畫朗讀連載", "ifDesc": "Otto 的翻頁日記", "coDesc": "座標明信片"}, "es": {"name": "Español", "kicker": "Un blog del estudio Pythoneer", "intro": "En cada episodio nace un pequeño juego: unas casillas, una regla, un botón de jugar. Míralo crecer de un mapa vacío a algo que de verdad se puede jugar.", "ep1t": "Un mapa de casillas vacío", "ep1n": "El episodio 1 empieza donde empiezan todos los juegos: solo una cuadrícula. Pronto estará aquí.", "moreTitle": "Más de nosotros", "privacy": "Privacidad", "swDesc": "cómics de Chillfriends, leídos en voz alta", "ifDesc": "el diario de flipbook de Otto", "coDesc": "postales de coordenadas"}, "fr": {"name": "Français", "kicker": "Un blog du studio Pythoneer", "intro": "À chaque épisode, un petit jeu prend vie — quelques tuiles, une règle, un bouton play. Regardez-le passer d'une carte vide à un vrai jeu jouable.", "ep1t": "Une carte de tuiles vide", "ep1n": "L'épisode 1 commence là où commencent tous les jeux : une simple grille. Bientôt ici.", "moreTitle": "Nos créations", "privacy": "Confidentialité", "swDesc": "les BD Chillfriends, lues à voix haute", "ifDesc": "le journal flipbook d'Otto", "coDesc": "cartes postales de coordonnées"}, "de": {"name": "Deutsch", "kicker": "Ein Blog aus dem Pythoneer-Studio", "intro": "In jeder Folge entsteht ein kleines Spiel — ein paar Kacheln, eine Regel, ein Play-Button. Sieh zu, wie aus einer leeren Karte etwas wird, das man wirklich spielen kann.", "ep1t": "Eine leere Kachelkarte", "ep1n": "Folge 1 beginnt, wo jedes Spiel beginnt: mit nichts als einem Raster. Bald hier.", "moreTitle": "Mehr von uns", "privacy": "Datenschutz", "swDesc": "Chillfriends-Comics, vorgelesen", "ifDesc": "Ottos Daumenkino-Tagebuch", "coDesc": "Koordinaten-Postkarten"}, "pt": {"name": "Português", "kicker": "Um blog do estúdio Pythoneer", "intro": "A cada episódio, um pequeno jogo ganha vida — alguns blocos, uma regra, um botão de jogar. Veja-o crescer de um mapa vazio até algo que dá para jogar de verdade.", "ep1t": "Um mapa de blocos vazio", "ep1n": "O episódio 1 começa onde todo jogo começa: só uma grade. Em breve por aqui.", "moreTitle": "Mais do estúdio", "privacy": "Privacidade", "swDesc": "quadrinhos Chillfriends, lidos em voz alta", "ifDesc": "o diário de flipbook do Otto", "coDesc": "cartões-postais de coordenadas"}, "ru": {"name": "Русский", "kicker": "Блог студии Pythoneer", "intro": "В каждом выпуске рождается маленькая игра — несколько плиток, одно правило, кнопка «играть». Смотрите, как пустая карта становится игрой, в которую правда можно играть.", "ep1t": "Одна пустая карта из плиток", "ep1n": "Выпуск 1 начинается там же, где начинается любая игра: с пустой сетки. Скоро здесь.", "moreTitle": "Ещё от нас", "privacy": "Конфиденциальность", "swDesc": "комиксы Chillfriends, озвученные вслух", "ifDesc": "флипбук-дневник Отто", "coDesc": "координатные открытки"}};
-  var EN = {"kicker": "A blog from the Pythoneer studio", "intro": "Each episode, a small game comes to life — a few tiles, one rule, a play button. Watch it grow from an empty map to something you can actually play.", "ep1t": "One empty tile map", "ep1n": "Episode 1 starts where every game starts: nothing but a grid. It will land here soon.", "moreTitle": "More from us", "privacy": "Privacy", "swDesc": "chillfriends comics, read aloud", "ifDesc": "otto's flipbook diary", "coDesc": "coordinate postcards"};
+  // ── Vol. 1 — 38개 중 다섯. 층·보상은 앱 카탈로그(PakCatalog) 그대로 ──
+  var EPISODES = [
+    {n:1, t:"Bubble Pop",   src:"/media/bubble-pop.mp4",      where:"where1", note:"e1n"},
+    {n:2, t:"Stomp!",       src:"/media/stomp-run.mp4",       where:"where1", note:"e2n"},
+    {n:3, t:"Gold Runner",  src:"/media/gold-runner.mp4",     where:"where2", note:"e3n"},
+    {n:4, t:"Crystal Mine", src:"/media/crystal-mine-v2.mp4", where:"where3", note:"e4n"},
+    {n:5, t:"Ghost Maze",   src:"/media/ghost-maze.mp4",      where:"where4", note:"e5n"}
+  ];
+
+  var EN = {
+    "kicker": "Pythoneer · a dig-and-build world with 38 games inside",
+    "intro": "Pythoneer is one big world with thirty-eight small arcade games buried in it. Dig one up, beat it, and what you won comes back out with you — a deeper pickaxe, a lantern, a block to build with. Then make your own and bury it for a friend. This blog digs them up, one episode at a time.",
+    "free": "Free to start on iPhone and iPad — the surface, the shallow mine and the sky islands hold 22 of the 38 games. One purchase opens the sealed layers below.",
+    "vol1": "Vol. 1 · five of the thirty-eight",
+    "where1": "the surface", "where2": "the shallow mine", "where3": "the deep", "where4": "the very bottom",
+    "e1n": "An easy first dig, right on the surface. Beat it and you walk out with a bubble bottle.",
+    "e2n": "Stomp your way through, on the surface. The prize is a pair of spring shoes.",
+    "e3n": "A rare find in the shallow mine. It pays out in bricks — sixteen of them, yours to build with.",
+    "e4n": "Down in the sealed deep. Beat it and you carry back a crystal lamp.",
+    "e5n": "A legendary one from the very bottom. The reward is a ghost lantern for the dark.",
+    "newTag": "Now live",
+    "newNote": "Version 3.0 is on the App Store. One world to keep, thirty-eight games to dig up, rewards that come back out with you — and a game you make lands buried in your friend's world, not in a list.",
+    "moreTitle": "More from us", "privacy": "Privacy",
+    "swDesc": "chillfriends comics, read aloud", "ifDesc": "otto's flipbook diary", "coDesc": "coordinate postcards"
+  };
+  var I18N = {
+    "ko": {"name": "한국어",
+      "kicker": "Pythoneer · 38개의 게임이 묻혀 있는 파고 짓는 세계",
+      "intro": "Pythoneer는 하나의 큰 세계이고, 그 안에 작은 아케이드 게임 서른여덟 개가 묻혀 있습니다. 하나를 파내서 깨면 얻은 것이 함께 밖으로 나옵니다 — 더 깊이 파는 곡괭이, 등불, 쌓을 수 있는 블록. 그다음엔 나만의 게임을 만들어 친구의 세계에 묻어 주세요. 이 블로그는 그 게임들을 한 화에 하나씩 파냅니다.",
+      "free": "iPhone·iPad에서 무료로 시작 — 지표·얕은 갱도·하늘 섬에 38개 중 22개가 있습니다. 봉인된 아래층은 한 번의 구매로 열립니다.",
+      "vol1": "1권 · 서른여덟 중 다섯",
+      "where1": "지표", "where2": "얕은 갱도", "where3": "심층", "where4": "가장 깊은 곳",
+      "e1n": "지표에서 바로 파내는 쉬운 첫 게임. 깨면 거품 병을 들고 나옵니다.",
+      "e2n": "지표에서 밟고 지나가는 게임. 상품은 스프링 신발 한 켤레.",
+      "e3n": "얕은 갱도의 희귀한 발견. 보상은 벽돌 열여섯 장 — 마음껏 쌓으세요.",
+      "e4n": "봉인된 심층 아래. 깨면 수정 램프를 들고 돌아옵니다.",
+      "e5n": "가장 깊은 곳의 전설 등급. 보상은 어둠을 밝히는 유령 등불.",
+      "newTag": "출시됨",
+      "newNote": "3.0 버전이 App Store에 올라왔습니다. 간직할 세계 하나, 파낼 게임 서른여덟, 함께 나오는 보상 — 그리고 내가 만든 게임은 목록이 아니라 친구의 세계에 묻힙니다.",
+      "moreTitle": "우리가 만드는 것들", "privacy": "개인정보 처리방침",
+      "swDesc": "칠프렌즈 코믹스, 낭독 연재", "ifDesc": "오토의 플립북 일기", "coDesc": "좌표 엽서"},
+    "ja": {"name": "日本語",
+      "kicker": "Pythoneer · 38のゲームが埋まった、掘って建てる世界",
+      "intro": "Pythoneerはひとつの大きな世界。その中に小さなアーケードゲームが38本埋まっています。掘り出してクリアすると、手に入れたものが一緒に外へ出てきます — 深く掘れるツルハシ、ランタン、積めるブロック。次は自分のゲームを作って、友だちの世界に埋めましょう。このブログは、そのゲームを一話に一本ずつ掘り出します。",
+      "free": "iPhone・iPadで無料で始められます — 地表・浅い坑道・空の島に38本のうち22本。封印された下層はひとつの購入で開きます。",
+      "vol1": "第1巻 · 38のうちの5本",
+      "where1": "地表", "where2": "浅い坑道", "where3": "深層", "where4": "最深部",
+      "e1n": "地表ですぐ掘れる、やさしい最初の一本。クリアすると泡のボトルを持って出られます。",
+      "e2n": "地表で踏みつけて進むゲーム。賞品はスプリングシューズ。",
+      "e3n": "浅い坑道のレアな発見。報酬はレンガ16個 — 好きに積んでください。",
+      "e4n": "封印された深層の下。クリアするとクリスタルランプを持ち帰れます。",
+      "e5n": "最深部の伝説級。報酬は暗闇を照らすゴーストランタン。",
+      "newTag": "配信中",
+      "newNote": "バージョン3.0がApp Storeに登場。手元に残るひとつの世界、掘り出す38のゲーム、一緒に出てくる報酬 — そして自分で作ったゲームは、リストではなく友だちの世界に埋まります。",
+      "moreTitle": "私たちの作品", "privacy": "プライバシー",
+      "swDesc": "チルフレンズ・コミックス朗読連載", "ifDesc": "オットーのパラパラ日記", "coDesc": "座標のポストカード"},
+    "zh-Hans": {"name": "简体中文",
+      "kicker": "Pythoneer · 一个埋着 38 个游戏的挖掘建造世界",
+      "intro": "Pythoneer 是一个大世界，里面埋着三十八个小型街机游戏。挖出一个，打通它，赢到的东西会跟你一起出来——挖得更深的镐、一盏灯、可以用来搭建的方块。然后做一个你自己的，埋进朋友的世界里。这个博客每一集挖出一个。",
+      "free": "在 iPhone 和 iPad 上免费开始——地表、浅矿和天空岛藏着 38 个中的 22 个。一次购买打开下方封印的层。",
+      "vol1": "第 1 卷 · 三十八个中的五个",
+      "where1": "地表", "where2": "浅矿", "where3": "深层", "where4": "最底部",
+      "e1n": "地表上就能挖到的简单第一关。打通后带着一瓶泡泡出来。",
+      "e2n": "在地表一路踩过去。奖品是一双弹簧鞋。",
+      "e3n": "浅矿里的稀有发现。奖励是十六块砖——随你搭建。",
+      "e4n": "在封印的深层之下。打通后带回一盏水晶灯。",
+      "e5n": "来自最底部的传说级。奖励是一盏照亮黑暗的幽灵灯。",
+      "newTag": "已上线",
+      "newNote": "3.0 版已登陆 App Store。一个属于你的世界、三十八个待挖的游戏、跟你一起出来的奖励——而你做的游戏会埋进朋友的世界，而不是躺在列表里。",
+      "moreTitle": "我们的作品", "privacy": "隐私政策",
+      "swDesc": "Chillfriends 漫画朗读连载", "ifDesc": "Otto 的翻页日记", "coDesc": "坐标明信片"},
+    "zh-Hant": {"name": "繁體中文",
+      "kicker": "Pythoneer · 一個埋著 38 個遊戲的挖掘建造世界",
+      "intro": "Pythoneer 是一個大世界，裡面埋著三十八個小型街機遊戲。挖出一個，打通它，贏到的東西會跟你一起出來——挖得更深的鎬、一盞燈、可以用來搭建的方塊。然後做一個你自己的，埋進朋友的世界裡。這個部落格每一集挖出一個。",
+      "free": "在 iPhone 和 iPad 上免費開始——地表、淺礦和天空島藏著 38 個中的 22 個。一次購買打開下方封印的層。",
+      "vol1": "第 1 卷 · 三十八個中的五個",
+      "where1": "地表", "where2": "淺礦", "where3": "深層", "where4": "最底部",
+      "e1n": "地表上就能挖到的簡單第一關。打通後帶著一瓶泡泡出來。",
+      "e2n": "在地表一路踩過去。獎品是一雙彈簧鞋。",
+      "e3n": "淺礦裡的稀有發現。獎勵是十六塊磚——隨你搭建。",
+      "e4n": "在封印的深層之下。打通後帶回一盞水晶燈。",
+      "e5n": "來自最底部的傳說級。獎勵是一盞照亮黑暗的幽靈燈。",
+      "newTag": "已上線",
+      "newNote": "3.0 版已登陸 App Store。一個屬於你的世界、三十八個待挖的遊戲、跟你一起出來的獎勵——而你做的遊戲會埋進朋友的世界，而不是躺在列表裡。",
+      "moreTitle": "我們的作品", "privacy": "隱私權政策",
+      "swDesc": "Chillfriends 漫畫朗讀連載", "ifDesc": "Otto 的翻頁日記", "coDesc": "座標明信片"},
+    "es": {"name": "Español",
+      "kicker": "Pythoneer · un mundo de cavar y construir con 38 juegos dentro",
+      "intro": "Pythoneer es un gran mundo con treinta y ocho pequeños juegos arcade enterrados. Desentierra uno, supéralo, y lo que ganaste sale contigo: un pico que cava más hondo, un farol, un bloque para construir. Luego crea el tuyo y entiérralo para un amigo. Este blog los desentierra, uno por episodio.",
+      "free": "Gratis para empezar en iPhone y iPad: la superficie, la mina poco profunda y las islas del cielo guardan 22 de los 38 juegos. Una sola compra abre las capas selladas de abajo.",
+      "vol1": "Vol. 1 · cinco de los treinta y ocho",
+      "where1": "la superficie", "where2": "la mina poco profunda", "where3": "las profundidades", "where4": "el fondo",
+      "e1n": "Una primera excavación fácil, en la superficie. Supéralo y sales con una botella de burbujas.",
+      "e2n": "Abre camino pisoteando, en la superficie. El premio: unas zapatillas de resorte.",
+      "e3n": "Un hallazgo raro en la mina poco profunda. Paga en ladrillos: dieciséis, para construir.",
+      "e4n": "Abajo, en las profundidades selladas. Supéralo y vuelves con una lámpara de cristal.",
+      "e5n": "Uno legendario, desde el fondo. La recompensa es un farol fantasma para la oscuridad.",
+      "newTag": "Ya disponible",
+      "newNote": "La versión 3.0 está en el App Store. Un mundo que es tuyo, treinta y ocho juegos por desenterrar, recompensas que salen contigo — y el juego que creas queda enterrado en el mundo de tu amigo, no en una lista.",
+      "moreTitle": "Más de nosotros", "privacy": "Privacidad",
+      "swDesc": "cómics de Chillfriends, leídos en voz alta", "ifDesc": "el diario de flipbook de Otto", "coDesc": "postales de coordenadas"},
+    "fr": {"name": "Français",
+      "kicker": "Pythoneer · un monde à creuser et bâtir, 38 jeux à l'intérieur",
+      "intro": "Pythoneer est un grand monde où trente-huit petits jeux d'arcade sont enterrés. Déterrez-en un, gagnez, et ce que vous avez remporté ressort avec vous : une pioche qui creuse plus profond, une lanterne, un bloc pour construire. Puis créez le vôtre et enterrez-le pour un ami. Ce blog les déterre, un par épisode.",
+      "free": "Gratuit pour commencer sur iPhone et iPad : la surface, la mine peu profonde et les îles du ciel abritent 22 des 38 jeux. Un seul achat ouvre les couches scellées en dessous.",
+      "vol1": "Vol. 1 · cinq des trente-huit",
+      "where1": "la surface", "where2": "la mine peu profonde", "where3": "les profondeurs", "where4": "tout au fond",
+      "e1n": "Une première fouille facile, à la surface. Gagnez et vous repartez avec une bouteille de bulles.",
+      "e2n": "Frayez-vous un chemin en piétinant, à la surface. Le prix : des chaussures à ressort.",
+      "e3n": "Une trouvaille rare dans la mine peu profonde. Elle paie en briques : seize, pour construire.",
+      "e4n": "Dans les profondeurs scellées. Gagnez et vous rapportez une lampe de cristal.",
+      "e5n": "Un légendaire, tout au fond. La récompense : une lanterne fantôme pour l'obscurité.",
+      "newTag": "Disponible",
+      "newNote": "La version 3.0 est sur l'App Store. Un monde à garder, trente-huit jeux à déterrer, des récompenses qui ressortent avec vous — et le jeu que vous créez est enterré dans le monde de votre ami, pas dans une liste.",
+      "moreTitle": "Nos créations", "privacy": "Confidentialité",
+      "swDesc": "les BD Chillfriends, lues à voix haute", "ifDesc": "le journal flipbook d'Otto", "coDesc": "cartes postales de coordonnées"},
+    "de": {"name": "Deutsch",
+      "kicker": "Pythoneer · eine Grab-und-Bau-Welt mit 38 Spielen darin",
+      "intro": "Pythoneer ist eine große Welt, in der achtunddreißig kleine Arcade-Spiele vergraben sind. Grab eins aus, schaff es, und was du gewonnen hast, kommt mit dir heraus — eine tiefer beißende Spitzhacke, eine Laterne, ein Block zum Bauen. Dann bau dein eigenes und vergrab es für einen Freund. Dieser Blog gräbt sie aus, eins pro Folge.",
+      "free": "Kostenlos starten auf iPhone und iPad — Oberfläche, flache Mine und Himmelsinseln bergen 22 der 38 Spiele. Ein einziger Kauf öffnet die versiegelten Schichten darunter.",
+      "vol1": "Bd. 1 · fünf von achtunddreißig",
+      "where1": "die Oberfläche", "where2": "die flache Mine", "where3": "die Tiefe", "where4": "ganz unten",
+      "e1n": "Ein leichter erster Fund, direkt an der Oberfläche. Schaff es und du gehst mit einer Seifenblasenflasche.",
+      "e2n": "Stampf dich durch, an der Oberfläche. Der Preis: ein Paar Sprungschuhe.",
+      "e3n": "Ein seltener Fund in der flachen Mine. Er zahlt in Ziegeln — sechzehn, zum Bauen.",
+      "e4n": "Unten in der versiegelten Tiefe. Schaff es und du bringst eine Kristalllampe mit.",
+      "e5n": "Ein legendäres von ganz unten. Die Belohnung: eine Geisterlaterne für die Dunkelheit.",
+      "newTag": "Jetzt live",
+      "newNote": "Version 3.0 ist im App Store. Eine Welt zum Behalten, achtunddreißig Spiele zum Ausgraben, Belohnungen, die mit dir herauskommen — und ein Spiel, das du baust, landet vergraben in der Welt deines Freundes, nicht in einer Liste.",
+      "moreTitle": "Mehr von uns", "privacy": "Datenschutz",
+      "swDesc": "Chillfriends-Comics, vorgelesen", "ifDesc": "Ottos Daumenkino-Tagebuch", "coDesc": "Koordinaten-Postkarten"},
+    "pt": {"name": "Português",
+      "kicker": "Pythoneer · um mundo de cavar e construir com 38 jogos dentro",
+      "intro": "Pythoneer é um grande mundo com trinta e oito pequenos jogos de arcade enterrados. Desenterre um, vença, e o que você ganhou sai junto com você — uma picareta que cava mais fundo, uma lanterna, um bloco para construir. Depois crie o seu e enterre para um amigo. Este blog os desenterra, um por episódio.",
+      "free": "Grátis para começar no iPhone e iPad — a superfície, a mina rasa e as ilhas do céu guardam 22 dos 38 jogos. Uma única compra abre as camadas seladas abaixo.",
+      "vol1": "Vol. 1 · cinco dos trinta e oito",
+      "where1": "a superfície", "where2": "a mina rasa", "where3": "o fundo", "where4": "o fundo do fundo",
+      "e1n": "Uma primeira escavação fácil, na superfície. Vença e saia com um frasco de bolhas.",
+      "e2n": "Abra caminho pisoteando, na superfície. O prêmio: um par de sapatos de mola.",
+      "e3n": "Um achado raro na mina rasa. Paga em tijolos — dezesseis, para construir.",
+      "e4n": "Lá embaixo, no fundo selado. Vença e traga de volta uma lâmpada de cristal.",
+      "e5n": "Um lendário, do fundo do fundo. A recompensa é uma lanterna fantasma para o escuro.",
+      "newTag": "No ar",
+      "newNote": "A versão 3.0 está na App Store. Um mundo para guardar, trinta e oito jogos para desenterrar, recompensas que saem com você — e o jogo que você cria fica enterrado no mundo do seu amigo, não numa lista.",
+      "moreTitle": "Mais do estúdio", "privacy": "Privacidade",
+      "swDesc": "quadrinhos Chillfriends, lidos em voz alta", "ifDesc": "o diário de flipbook do Otto", "coDesc": "cartões-postais de coordenadas"},
+    "ru": {"name": "Русский",
+      "kicker": "Pythoneer · мир, где копают и строят, и в нём 38 игр",
+      "intro": "Pythoneer — это один большой мир, в котором закопаны тридцать восемь маленьких аркадных игр. Откопайте одну, пройдите — и выигранное выйдет наружу вместе с вами: кирка, что бьёт глубже, фонарь, блок для стройки. Потом сделайте свою и закопайте её для друга. Этот блог откапывает их по одной на выпуск.",
+      "free": "Бесплатно для начала на iPhone и iPad — на поверхности, в мелкой шахте и на небесных островах 22 из 38 игр. Одна покупка открывает запечатанные слои ниже.",
+      "vol1": "Том 1 · пять из тридцати восьми",
+      "where1": "поверхность", "where2": "мелкая шахта", "where3": "глубина", "where4": "самое дно",
+      "e1n": "Лёгкая первая находка прямо на поверхности. Пройдите — и выйдете с бутылкой пузырей.",
+      "e2n": "Протопчите себе дорогу на поверхности. Приз — пружинные ботинки.",
+      "e3n": "Редкая находка в мелкой шахте. Платит кирпичами — шестнадцать штук, стройте что хотите.",
+      "e4n": "В запечатанной глубине. Пройдите — и принесёте хрустальную лампу.",
+      "e5n": "Легендарная, с самого дна. Награда — призрачный фонарь для темноты.",
+      "newTag": "Уже вышла",
+      "newNote": "Версия 3.0 в App Store. Один мир, который остаётся с вами, тридцать восемь игр, которые надо откопать, награды, что выходят вместе с вами — а сделанная вами игра оказывается закопанной в мире друга, а не в списке.",
+      "moreTitle": "Ещё от нас", "privacy": "Конфиденциальность",
+      "swDesc": "комиксы Chillfriends, озвученные вслух", "ifDesc": "флипбук-дневник Отто", "coDesc": "координатные открытки"}
+  };
   function detect(){
     var langs = navigator.languages || [navigator.language || "en"];
     for (var i=0;i<langs.length;i++){
@@ -145,6 +364,7 @@
       } catch(_){}
     });
   }
+  function dict(){ return (cur === "en") ? EN : I18N[cur]; }
   function apply(lang){
     cur = (lang === "en" || !I18N[lang]) ? "en" : lang;
     if (cur !== "en") alt = cur;
@@ -152,7 +372,7 @@
       localStorage.setItem("site_lang", cur);
       if (alt) localStorage.setItem("site_lang_alt", alt);
     } catch(_){}
-    var d = (cur === "en") ? EN : I18N[cur];
+    var d = dict();
     document.querySelectorAll("[data-t]").forEach(function(el){
       var k = el.getAttribute("data-t");
       if (d[k]) el.textContent = d[k];
@@ -167,6 +387,28 @@
     carryLang();
   }
   document.getElementById("langToggle").addEventListener("click", function(){ apply(cur === "en" ? alt : "en"); });
+
+  // ── 플레이어 + 에피소드 레일 ──
+  var player = document.getElementById("player");
+  function select(ep, scroll){
+    if (player.getAttribute("src") !== ep.src){ player.src = ep.src; player.play().catch(function(){}); }
+    document.getElementById("nowEp").textContent = "E" + ep.n + " · Vol. 1";
+    document.getElementById("nowTitle").textContent = ep.t;
+    document.getElementById("nowNote").setAttribute("data-t", ep.note);
+    document.getElementById("nowNote").textContent = dict()[ep.note];
+    document.querySelectorAll(".ep").forEach(function(b){ b.classList.toggle("on", +b.dataset.n === ep.n); });
+    if (scroll) document.querySelector(".stage").scrollIntoView({behavior:"smooth", block:"nearest"});
+  }
+  var rail = document.getElementById("rail");
+  EPISODES.forEach(function(e){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "ep"; b.dataset.n = e.n;
+    b.innerHTML = '<div class="e-num">E' + e.n + '</div><div class="e-title"></div><div class="e-where" data-t="' + e.where + '"></div>';
+    b.querySelector(".e-title").textContent = e.t;
+    b.addEventListener("click", function(){ select(e, true); });
+    rail.appendChild(b);
+  });
+  select(EPISODES[0], false);
   apply(cur);
   document.querySelectorAll('a.email').forEach(function(a){
     a.href = 'mailto:' + a.dataset.u + String.fromCharCode(64) + a.dataset.d;
