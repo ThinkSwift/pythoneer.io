@@ -24,8 +24,8 @@
 <body>
   <div class="card">
     <div class="logo">🧱</div>
-    <h1>Open in Pythoneer</h1>
-    <p>Someone shared a world with you. Get Pythoneer to play &amp; remix it.</p>
+    <h1 id="t">Page not found</h1>
+    <p id="d">Your own world is waiting in Pythoneer — with 38 little games buried in it.</p>
     <!-- Default is the safe "coming soon" state. The script upgrades it to a real
          Download button only when a real https:// App Store URL is configured, so
          a missing/forgotten substitution can never ship a dead link (or no JS). -->
@@ -49,7 +49,12 @@
     (function () {
       var parts = location.pathname.split('/').filter(Boolean);   // 404 퍼널 겸용: /w/<id>만 앱으로
       var id = (parts[0] === 'w' && parts.length > 1) ? parts[parts.length - 1] : null;
-      if (id) { location.href = 'pythoneer://w/' + id; }
+      // 3.1: 공유 월드는 철거됐다 — 옛 링크엔 그 사실을 말한다 (앱도 같은 안내를 띄운다).
+      if (id) {
+        document.getElementById('t').textContent = 'Shared worlds are gone';
+        document.getElementById('d').textContent = 'Links to shared worlds don\u2019t open anymore. Your own world is waiting in Pythoneer \u2014 with 38 little games buried in it.';
+        location.href = 'pythoneer://w/' + id;
+      }
     })();
   </script>
 <!-- 앱스토어 클릭 계측 — ct= 는 설치를 가르지만 클릭은 못 센다. 둘을 같이 봐야 이탈이 보인다.
