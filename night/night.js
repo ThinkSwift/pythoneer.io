@@ -294,7 +294,7 @@ export class Night {
     p.anim++;
     if (p.hitCool > 0) p.hitCool--;
     if (p.down > 0) {
-      if (--p.down === 0) { p.armor = 1; this.say("The Py got back up — one shell layer"); }   // missed the window: not a loss
+      if (--p.down === 0) { p.armor = 1; this.say("say_up"); }   // missed the window: not a loss
       return;
     }
     const rush = this.clock - this.pyOutAt > PY_OUT_LIMIT;
@@ -425,11 +425,11 @@ export class Night {
     if (p.armor > 0) {
       p.armor--;
       this.burst(p.x + 0.5, p.y + 0.5, p.armor === 0 ? "#ffffff" : "#b07cff");
-      if (p.armor === 0) { this.fx.push({ kind: "flash", t: 8, color: "#ffffff" }); this.say("The shell broke — hit it once more"); }
+      if (p.armor === 0) { this.fx.push({ kind: "flash", t: 8, color: "#ffffff" }); this.say("say_broke"); }
       return;
     }
     p.down = SEAL_WINDOW; p.vx = 0;
-    this.say("Touch the Py to seal it");
+    this.say("say_touch");
   }
 
   seal() {
@@ -471,7 +471,8 @@ export class Night {
   /** What the HUD shows — every condition on screen. */
   status() {
     const left = NIGHT.bodies - this.spawned + this.foes.filter((f) => f.alive).length;
-    return { hearts: this.hero.hearts, left, py: this.py ? (this.py.down ? `down ${Math.ceil(this.py.down / TPS)}s` : `shell ${this.py.armor}`) : null,
+    return { hearts: this.hero.hearts, left,
+      pyDown: this.py && this.py.down ? Math.ceil(this.py.down / TPS) : null, pyShell: this.py && !this.py.down ? this.py.armor : null,
       pyCountdown: this.py ? null : Math.max(0, Math.ceil(NIGHT.bodies * NIGHT.pyAt) - this.spawned) };
   }
 

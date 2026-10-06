@@ -3,6 +3,7 @@ import { Night, NIGHT, GUEST_AFTER } from "./night.js";
 import { Room, bringPyHome, pyHalf, spHalf, doorTo, receiveDoor, member } from "./house.js";
 import { drawFrame } from "./pixels.js";
 import { track } from "./track.js";
+import { t, applyI18n } from "./i18n.js";
 
 const APP_STORE = "https://apps.apple.com/app/id6754533772";
 const $ = (s) => document.querySelector(s);
@@ -13,8 +14,7 @@ const losses = () => { try { return Number(localStorage.getItem(LOSS_KEY) || 0);
 const setLosses = (n) => { try { localStorage.setItem(LOSS_KEY, String(n)); } catch {} };
 function guestLine() {
   const n = losses();
-  return n >= GUEST_AFTER ? "A guest Shooter (power 200) joins you on the first floor tonight."
-    : n > 0 ? `Lost ${n} of ${GUEST_AFTER} — after ${GUEST_AFTER} losses a guest joins the tower.` : `After ${GUEST_AFTER} losses a guest joins the tower.`;
+  return n >= GUEST_AFTER ? t("guest_here") : n > 0 ? t("guest_count", { k: n, n: GUEST_AFTER }) : t("guest_soon", { n: GUEST_AFTER });
 }
 
 function start() {
@@ -22,8 +22,8 @@ function start() {
   $("#intro").hidden = true; $("#result").hidden = true; $("#say").textContent = "";
   night = new Night($("#night"), {
     onEnd: end,
-    onSay: (t) => { $("#say").textContent = t; },
-    onPyOut: () => { $("#say").textContent = "The Py is out — crack its shell"; },
+    onSay: (key) => { $("#say").textContent = t(key); },
+    onPyOut: () => { $("#say").textContent = t("say_out"); },
     onClose: () => { paused = !paused; if (paused) night.stop(); else start(); },
     guest: losses() >= GUEST_AFTER,
   });
@@ -36,8 +36,8 @@ function hud() {
   if (!night || night.stopped) return;
   const s = night.status();
   $("#hearts").textContent = "♥".repeat(Math.max(0, s.hearts)) + "♡".repeat(Math.max(0, 3 - s.hearts));
-  $("#left").textContent = `Swarm ${s.left}`;
-  $("#pystate").textContent = s.py ? `Py: ${s.py}` : `Py: comes out in ${s.pyCountdown}`;
+  $("#left").textContent = t("swarm", { n: s.left });
+  $("#pystate").textContent = s.pyDown != null ? t("py_down", { n: s.pyDown }) : s.pyShell != null ? t("py_shell", { n: s.pyShell }) : t("py_in", { n: s.pyCountdown });
   requestAnimationFrame(hud);
 }
 
@@ -54,13 +54,13 @@ function end(r) {
       const n = bringPyHome(member("tpl-vines", "Vines", { idle: py[0], walk: py[1], die: py[2] }, "Night 4"));
       track("move_in", { n: String(n), what: "py" });
       drawFrame(ctx, py[0], 8, 8, 10);
-      $("#result-title").textContent = "Sealed!";
-      $("#result-line").textContent = `Vines is on your shelf · ${n}/38. ${st.seconds}s · the tower took ${st.shot + st.bubble}, you took ${st.hero}.`;
+      $("#result-title").textContent = t("sealed");
+      $("#result-line").textContent = t("sealed_line", { n, s: st.seconds, t: st.shot + st.bubble, h: st.hero });
       room?.refresh(); renderHouse();
     } else {
       drawFrame(ctx, night.art.hero[2], 8, 8, 10);
-      $("#result-title").textContent = r.cause === "torch" ? "The torch went out" : "Out of hearts";
-      $("#result-line").textContent = `${st.seconds}s · ${st.escapes} reached the ground. ${guestLine()}`;
+      $("#result-title").textContent = t(r.cause === "torch" ? "torch_out" : "out_of_hearts");
+      $("#result-line").textContent = t("lost_line", { s: st.seconds, e: st.escapes, guest: guestLine() });
     }
   }, r.win ? 1600 : 900);
 }
@@ -68,8 +68,8 @@ function end(r) {
 function renderHouse() {
   const py = pyHalf(), sp = spHalf();
   const pys = py?.pys?.have?.length || 0;
-  $("#house-count").textContent = `Pys ${pys}/${py?.pys?.total || 38} · Pets ${py?.pets?.have?.length || 0}/${py?.pets?.total || 6} · Fish ${py?.fish?.have?.length || 0}/${py?.fish?.total || 6}`;
-  $("#sp-count").textContent = sp.residents.length ? `${sp.residents.length} from Spriteer` : "No one from Spriteer yet";
+  $("#house-count").textContent = t("py_counts", { a: pys, b: py?.pys?.total || 38, c: py?.pets?.have?.length || 0, d: py?.pets?.total || 6, e: py?.fish?.have?.length || 0, f: py?.fish?.total || 6 });
+  $("#sp-count").textContent = sp.residents.length ? t("from_sp", { n: sp.residents.length }) : t("none_from_sp");
 }
 
 function bindPad() {
@@ -83,9 +83,12 @@ function bindPad() {
 }
 
 async function boot() {
+  applyI18n("page_title");
   await receiveDoor(location.hash);          // a house arriving from spriteer.com
   bindPad();
   $("#guest").textContent = guestLine();
+  $("#left").textContent = t("swarm", { n: NIGHT.bodies });                                   // the HUD before the night starts
+  $("#pystate").textContent = t("py_in", { n: Math.ceil(NIGHT.bodies * NIGHT.pyAt) });
   $("#start").onclick = start;
   $("#again").onclick = start;
   $("#to-house").onclick = () => $("#house").scrollIntoView({ behavior: "smooth" });
