@@ -32,6 +32,9 @@ const SEAL_WINDOW = 240;                                   // GC sealWindow (8 s
 const PY_OUT_LIMIT = 90 * TPS;                             // after 90 s the Py rushes the torch
 // From night 4 the perched Py throws balloons: one freezes a party member for 150 ticks; the hero pops it by touch (GC 3885-3948).
 const BALLOON_EVERY = Math.max(150, 330 - 5 * 4), BALLOON_FREEZE = 150;
+// Where the Py sits and when it first throws, as measured in the engine on night 4 (Pythoneer session, 3 runs):
+// tower-left + 9.1, on the roof; the first throw 379 ticks after it sits, then every balloonEvery.
+const PERCH_X = TOWER_X + 9.1, PERCH_Y = FLOOR_ROWS[0] - 1, FIRST_BALLOON = 379;
 // The party: two members = one pair on 3F, left and right, in front of the exits at tower columns 4 and 15
 // (GC towerPostPlan ~3578, towerPosts ~3608), in party order [bubbler, shooter]; each keeps within postLeash 2 of its post.
 // Combat power bubbler 124 · shooter 112 (Pythoneer session, night 4).
@@ -106,7 +109,7 @@ export class Night {
     const members = this.hooks.guest ? [...PARTY, GUEST] : PARTY;
     this.party = members.map((p) => ({ ...p, x: p.post, y: p.row - 1, face: 1, cool: 20, anim: 0, frozen: 0 }));
     this.py = null; this.pyOutAt = 0;
-    this.balloons = []; this.balloonClock = BALLOON_EVERY;  // the clock runs from the moment the Py sits on its perch (here: the night's start)
+    this.balloons = []; this.balloonClock = FIRST_BALLOON;  // from the moment the Py sits on its perch (here: the night's start)
     this.rng = 1 + Math.floor(Math.random() * 1e6);
     this.queue = this.buildQueue();
   }
@@ -206,7 +209,7 @@ export class Night {
   }
 
   bringPyOut() {
-    this.py = { x: TOWER_X + 9.5, y: FLOOR_ROWS[0] - 1, vx: 0, vy: 0, side: 0, armor: NIGHT.armor, down: 0, anim: 0, hitCool: 0 };
+    this.py = { x: PERCH_X, y: PERCH_Y, vx: 0, vy: 0, side: 0, armor: NIGHT.armor, down: 0, anim: 0, hitCool: 0 };
     this.pyOutAt = this.clock;
     this.hooks.onPyOut?.();
   }
@@ -319,7 +322,7 @@ export class Night {
   stepBalloons() {
     if (!this.py && this.clock > 0 && --this.balloonClock <= 0) {
       this.balloonClock = BALLOON_EVERY;
-      const fx = TOWER_X + 9.5, fy = FLOOR_ROWS[0] - 1.5;
+      const fx = PERCH_X, fy = PERCH_Y;
       // The nearest free member within 18 tiles of the Py (GC 3893-3912).
       const m = this.party.filter((p) => !p.frozen && Math.hypot(p.x - fx, p.y - fy) < 18).sort((a, b) => Math.hypot(a.x - fx, a.y - fy) - Math.hypot(b.x - fx, b.y - fy))[0];
       if (!m) return;
@@ -505,7 +508,7 @@ export class Night {
     drawFrame(ctx, this.art.torch, TORCH_X * T, Y(GROUND - 1), px);
 
     if (!this.py && this.clock > -60) {   // the Py on its roof perch, throwing balloons
-      drawFrame(ctx, this.art.py[Math.floor(this.tick / 12) % 2], (TOWER_X + 9.5) * T, Y(FLOOR_ROWS[0] - 1), px);
+      drawFrame(ctx, this.art.py[Math.floor(this.tick / 12) % 2], PERCH_X * T, Y(PERCH_Y), px);
     }
     for (const b of this.balloons) {
       ctx.fillStyle = "#ff7ab6"; ctx.beginPath(); ctx.arc((b.x + 0.5) * T, Y(b.y + 0.4), 0.38 * T, 0, 7); ctx.fill();
