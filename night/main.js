@@ -1,5 +1,5 @@
 // pythoneer.io/night — one night in the browser, then the Py goes on the house shelf (HOUSE.md: this site writes the exhibits).
-import { Night, NIGHT } from "./night.js";
+import { Night, NIGHT, GUEST_AFTER } from "./night.js";
 import { Room, bringPyHome, pyHalf, spHalf, doorTo, receiveDoor, member } from "./house.js";
 import { drawFrame } from "./pixels.js";
 import { track } from "./track.js";
@@ -7,6 +7,15 @@ import { track } from "./track.js";
 const APP_STORE = "https://apps.apple.com/app/id6754533772";
 const $ = (s) => document.querySelector(s);
 let night = null, room = null, paused = false;
+// The app's rule, shown on screen: after three losses on this night a guest (combat power 200) helps.
+const LOSS_KEY = "pythoneer.night4.losses";
+const losses = () => { try { return Number(localStorage.getItem(LOSS_KEY) || 0); } catch { return 0; } };
+const setLosses = (n) => { try { localStorage.setItem(LOSS_KEY, String(n)); } catch {} };
+function guestLine() {
+  const n = losses();
+  return n >= GUEST_AFTER ? "A guest Shooter (power 200) joins you on the first floor tonight."
+    : n > 0 ? `Lost ${n} of ${GUEST_AFTER} — after ${GUEST_AFTER} losses a guest joins the tower.` : `After ${GUEST_AFTER} losses a guest joins the tower.`;
+}
 
 function start() {
   night?.stop();
@@ -16,7 +25,9 @@ function start() {
     onSay: (t) => { $("#say").textContent = t; },
     onPyOut: () => { $("#say").textContent = "The Py is out — crack its shell"; },
     onClose: () => { paused = !paused; if (paused) night.stop(); else start(); },
+    guest: losses() >= GUEST_AFTER,
   });
+  $("#guest").textContent = guestLine();
   track("arcade_play", { game: "night", k: String(NIGHT.k) });
   hud();
 }
@@ -32,6 +43,7 @@ function hud() {
 
 function end(r) {
   const st = r.stats;
+  setLosses(r.win ? 0 : losses() + 1);
   track("duel_end", { game: "night", won: r.win ? "1" : "0", secs: String(st.seconds), escapes: String(st.escapes),
     shot: String(st.shot), bubble: String(st.bubble), hero: String(st.hero) });
   setTimeout(() => {
@@ -48,7 +60,7 @@ function end(r) {
     } else {
       drawFrame(ctx, night.art.hero[2], 8, 8, 10);
       $("#result-title").textContent = r.cause === "torch" ? "The torch went out" : "Out of hearts";
-      $("#result-line").textContent = `${st.seconds}s · ${st.escapes} reached the ground. The tower is still standing — try again.`;
+      $("#result-line").textContent = `${st.seconds}s · ${st.escapes} reached the ground. ${guestLine()}`;
     }
   }, r.win ? 1600 : 900);
 }
@@ -73,6 +85,7 @@ function bindPad() {
 async function boot() {
   await receiveDoor(location.hash);          // a house arriving from spriteer.com
   bindPad();
+  $("#guest").textContent = guestLine();
   $("#start").onclick = start;
   $("#again").onclick = start;
   $("#to-house").onclick = () => $("#house").scrollIntoView({ behavior: "smooth" });

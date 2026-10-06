@@ -32,13 +32,19 @@ const SEAL_WINDOW = 240;                                   // GC sealWindow (8 s
 const PY_OUT_LIMIT = 90 * TPS;                             // after 90 s the Py rushes the torch
 // From night 4 the perched Py throws balloons: one freezes a party member for 150 ticks; the hero pops it by touch (GC 3885-3948).
 const BALLOON_EVERY = Math.max(150, 330 - 5 * 4), BALLOON_FREEZE = 150;
-// The party: two members on posts [3F, 1F] (GC towerPostPlan); the shooter takes the upper post (it prefers the top),
-// which matches night 4's measured split (shot 83 · bubble 44). Combat power bubbler 124 · shooter 112 (Pythoneer session).
+// The party: two members = one pair on 3F, left and right, in front of the exits at tower columns 4 and 15
+// (GC towerPostPlan ~3578, towerPosts ~3608), in party order [bubbler, shooter]; each keeps within postLeash 2 of its post.
+// Combat power bubbler 124 · shooter 112 (Pythoneer session, night 4).
 const power = (p) => Math.pow(p / 100, 1.5) * 4.4;
+const POST_LEASH = 2;
 const PARTY = [
-  { role: "shooter", row: FLOOR_ROWS[2], cooldown: Math.round(70 / power(112)), range: 5.5 },
-  { role: "bubbler", row: FLOOR_ROWS[4], cooldown: Math.round(120 / power(124)), range: 7 },
+  { role: "bubbler", row: FLOOR_ROWS[2], post: TOWER_X + 4, cooldown: Math.round(120 / power(124)), range: 7 },
+  { role: "shooter", row: FLOOR_ROWS[2], post: TOWER_X + 15, cooldown: Math.round(70 / power(112)), range: 5.5 },
 ];
+// After three losses on the same night a guest with combat power 200 helps for that night (BattleLadder 160-173).
+// Three members = a pair on 3F and the odd one alone in the centre of the lowest floor (GC towerPostPlan).
+export const GUEST_AFTER = 3;
+const GUEST = { role: "shooter", row: FLOOR_ROWS[4], post: TOWER_X + 9.5, cooldown: Math.round(70 / power(200)), range: 5.5, guest: true };
 
 function solidAt(col, row) {
   if (row === GROUND) return true;
@@ -97,9 +103,10 @@ export class Night {
     this.hero = { x: TORCH_X - 0.4, y: GROUND - HERO.h, vx: 0, vy: 0, ground: true, coyote: 0, face: 1, hearts: HERO.hearts, hurt: 0, anim: 0 };
     this.foes = []; this.shots = []; this.bubbles = []; this.fx = [];
     this.spawned = 0; this.killed = { shot: 0, bubble: 0, hero: 0 }; this.escapes = 0;
-    this.party = PARTY.map((p) => ({ ...p, x: TOWER_X + 9.6, y: p.row - 1, face: 1, cool: 20, anim: 0 }));
+    const members = this.hooks.guest ? [...PARTY, GUEST] : PARTY;
+    this.party = members.map((p) => ({ ...p, x: p.post, y: p.row - 1, face: 1, cool: 20, anim: 0, frozen: 0 }));
     this.py = null; this.pyOutAt = 0;
-    this.balloons = []; this.balloonClock = 90;          // the first balloon once the Py is up on its perch
+    this.balloons = []; this.balloonClock = BALLOON_EVERY;  // the clock runs from the moment the Py sits on its perch (here: the night's start)
     this.rng = 1 + Math.floor(Math.random() * 1e6);
     this.queue = this.buildQueue();
   }
@@ -312,8 +319,10 @@ export class Night {
   stepBalloons() {
     if (!this.py && this.clock > 0 && --this.balloonClock <= 0) {
       this.balloonClock = BALLOON_EVERY;
-      const m = this.party[Math.floor(this.random() * this.party.length)];
       const fx = TOWER_X + 9.5, fy = FLOOR_ROWS[0] - 1.5;
+      // The nearest free member within 18 tiles of the Py (GC 3893-3912).
+      const m = this.party.filter((p) => !p.frozen && Math.hypot(p.x - fx, p.y - fy) < 18).sort((a, b) => Math.hypot(a.x - fx, a.y - fy) - Math.hypot(b.x - fx, b.y - fy))[0];
+      if (!m) return;
       this.balloons.push({ x: fx, y: fy, tx: m.x, ty: m.y - 0.6, m, t: 0, stuck: 0 });
     }
     const h = this.hero;
@@ -336,9 +345,12 @@ export class Night {
       m.anim++;
       if (m.frozen > 0) { m.frozen--; continue; }
       const onFloor = this.foes.filter((f) => f.alive && !f.trapped);
-      // A solo member covers its whole floor: drift toward the nearest body on its row, stay on the planks.
+      // Each holds its post (±postLeash): drift toward the nearest body on its row, never past the leash or off the planks.
       const near = onFloor.filter((f) => Math.abs(f.y + 1 - m.row) < 1.2).sort((a, b) => Math.abs(a.x - m.x) - Math.abs(b.x - m.x))[0];
-      if (near) { const d = near.x - m.x; m.face = Math.sign(d) || m.face; if (Math.abs(d) > 2) { const nx = m.x + Math.sign(d) * 0.06; if (solidAt(Math.floor(nx + 0.5), m.row)) m.x = nx; } }
+      if (near) {
+        const d = near.x - m.x; m.face = Math.sign(d) || m.face;
+        if (Math.abs(d) > 1) { const nx = m.x + Math.sign(d) * 0.06; if (Math.abs(nx - m.post) <= POST_LEASH && solidAt(Math.floor(nx + 0.5), m.row)) m.x = nx; }
+      }
       if (--m.cool > 0) continue;
       if (m.role === "shooter") {
         // The laser reaches 5.5 tiles but stays near its own floor (flyers dip into it) — bodies that drop to the ground are the hero's.
