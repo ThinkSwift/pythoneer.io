@@ -1,5 +1,5 @@
 // pythoneer.io/night — one night in the browser, then the Py goes on the house shelf (HOUSE.md: this site writes the exhibits).
-import { Night, NIGHT, GUEST_AFTER } from "./night.js";
+import { Night, NIGHT, GUEST_AFTER, PY_AFTER } from "./night.js";
 import { Room, bringPyHome, pyHalf, spHalf, doorTo, receiveDoor, member } from "./house.js";
 import { drawFrame } from "./pixels.js";
 import { track } from "./track.js";
@@ -88,7 +88,7 @@ async function boot() {
   bindPad();
   $("#guest").textContent = guestLine();
   $("#left").textContent = t("swarm", { n: NIGHT.bodies });                                   // the HUD before the night starts
-  $("#pystate").textContent = t("py_in", { n: Math.ceil(NIGHT.bodies * NIGHT.pyAt) });
+  $("#pystate").textContent = t("py_in", { n: PY_AFTER });
   $("#start").onclick = start;
   $("#again").onclick = start;
   $("#to-house").onclick = () => $("#house").scrollIntoView({ behavior: "smooth" });

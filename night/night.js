@@ -19,14 +19,20 @@ const GROUND = FLOOR_ROWS[4] + 5;                          // 21 — the first f
 const H = GROUND + 2;
 const STEPS = [[4, 6], [13, 15]];                          // hall step plates, three above the ground (GC hallSteps)
 const STEP_ROW = GROUND - 3;
-const TORCH_X = TOWER_X + 10;                              // the torch at the hero's feet, tower centre
+const TORCH_X = TOWER_X + 9;                               // the torch tile at the hero's feet (GC beacon: tower-left + 9)
 // Route per floor (GC towerGoal): roof inward, then inward, outward, inward, outward; the ground walks to the torch.
 const INWARD = [true, true, false, true, false];
 
 // --- night 4 (BattleTable k 4 · BattleLadder): pressure beat, 142 bodies, infantry 18 : flyer 3, level 1.12, armor 2
-export const NIGHT = { k: 4, name: "Vine Gauntlet", pak: "tpl-vines", bodies: 142, flyerShare: 3 / 21, level: 1.12, armor: 2,
-  carGap: 11, train: 10, trainRest: 50, waveGap: 120, shares: [0.3, 0.3, 0.4], pyAt: 0.65, maxOnScreen: 50 };
-const HERO = { w: 0.8, h: 0.95, gravity: 0.05, jump: 0.64, move: 0.14, maxFall: 0.45, coyote: 6, stomp: 0.52 * 0.65, invuln: 30, hearts: 3 };
+// The trains (GC beacon field · BattleLadder.waves): per wave, walkers and flyers per lane; a car carries one of each while it has them.
+// A car every carGap ticks of the field clock (from -60), a rest after `train` cars, the right lane laneLag behind, waveGap between waves.
+// The left lane waits while maxOnScreen are out; the Py comes out when pyAt of the left lane's cars have come.
+export const NIGHT = { k: 4, name: "Vine Gauntlet", pak: "tpl-vines", level: 1.12, armor: 2,
+  waves: [[18, 3], [18, 3], [25, 4]], carGap: 11, train: 10, trainRest: 50, waveGap: 120, laneLag: 80, firstClock: -60, pyAt: 0.65, maxOnScreen: 50 };
+NIGHT.bodies = 2 * NIGHT.waves.reduce((n, [g, f]) => n + g + f, 0);               // 142 — both lanes
+NIGHT.cars = NIGHT.waves.reduce((n, [g, f]) => n + Math.max(g, f), 0);            // the left lane's cars (the Py's count)
+const HERO = { w: 0.8, h: 0.95, gravity: 9.8 * 0.0051, jump: 0.64, move: 0.14, maxFall: 0.45, coyote: 6, stomp: 0.52 * 0.65, invuln: 30, hearts: 3 };
+const BUMP_REACH = 0.9;                                    // GC bumpReach — only the walker right over the head goes down
 const FOE_SPEED = 0.05 * 1.2 * 0.9 * NIGHT.level;         // patrolSpeed · kind factor · level
 const SEAL_WINDOW = 240;                                   // GC sealWindow (8 s)
 const PY_OUT_LIMIT = 90 * TPS;                             // after 90 s the Py rushes the torch
@@ -103,7 +109,7 @@ export class Night {
 
   reset() {
     this.tick = 0; this.clock = -60; this.over = null;
-    this.hero = { x: TORCH_X - 0.4, y: GROUND - HERO.h, vx: 0, vy: 0, ground: true, coyote: 0, face: 1, hearts: HERO.hearts, hurt: 0, anim: 0 };
+    this.hero = { x: TORCH_X + 0.1, y: GROUND - HERO.h, vx: 0, vy: 0, ground: true, coyote: 0, face: 1, hearts: HERO.hearts, hurt: 0, anim: 0 };
     this.foes = []; this.shots = []; this.bubbles = []; this.fx = [];
     this.spawned = 0; this.killed = { shot: 0, bubble: 0, hero: 0 }; this.escapes = 0;
     const members = this.hooks.guest ? [...PARTY, GUEST] : PARTY;
@@ -111,34 +117,32 @@ export class Night {
     this.py = null; this.pyOutAt = 0;
     this.balloons = []; this.balloonClock = FIRST_BALLOON;  // from the moment the Py sits on its perch (here: the night's start)
     this.rng = 1 + Math.floor(Math.random() * 1e6);
-    this.queue = this.buildQueue();
+    this.field = Night.newField();
   }
 
-  /** Every wave from both sides as trains (BattleLadder.waves): 30/30/40%, half each side, flyers spread through. */
-  buildQueue() {
-    const q = [];
-    const period = NIGHT.train * NIGHT.carGap + NIGHT.trainRest;
-    let t = 0;
-    NIGHT.shares.forEach((share, w) => {
-      const n = Math.round(NIGHT.bodies * share);
-      let waveEnd = t;
-      for (const side of [0, 1]) {
-        const count = side === 0 ? Math.ceil(n / 2) : Math.floor(n / 2);
-        const flyers = Math.round(count * NIGHT.flyerShare);
-        const every = flyers ? Math.floor(count / flyers) : Infinity;
-        let at = t + (side === 1 ? Math.round(period / 2) : 0);
-        for (let i = 0; i < count; i++) {
-          const kind = (i % every === every - 1) ? "bat" : "zombie";
-          q.push({ at, side, kind, wave: w });
-          at += NIGHT.carGap;
-          if ((i + 1) % NIGHT.train === 0) at += NIGHT.trainRest - NIGHT.carGap;
-        }
-        waveEnd = Math.max(waveEnd, at);
-      }
-      t = waveEnd + NIGHT.waveGap;
-    });
-    return q.sort((a, b) => a.at - b.at);
+  /** The trains, one tick of the field clock (GC beacon field, ~3650-3725): returns what spawns now, lane by lane. */
+  static fieldTick(f, onField) {
+    const out = [];
+    if (f.wave >= NIGHT.waves.length) return out;
+    f.clock++;
+    for (const l of f.lagged) l.t--;                                  // the right lane, laneLag behind its car
+    for (const l of f.lagged.filter((l) => l.t <= 0)) { if (l.walker) out.push({ side: 1, kind: "zombie" }); if (l.bat) out.push({ side: 1, kind: "bat" }); }
+    f.lagged = f.lagged.filter((l) => l.t > 0);
+    let now;
+    if (f.rest > 0) { f.rest--; now = false; } else now = f.clock >= 0 && f.clock % NIGHT.carGap === 0;
+    const [g, fl] = NIGHT.waves[f.wave], total = Math.max(g, fl);
+    if (now && f.car < total && onField < NIGHT.maxOnScreen) {
+      const walker = f.car < g, bat = f.car < fl;
+      if (walker) out.push({ side: 0, kind: "zombie" });
+      if (bat) out.push({ side: 0, kind: "bat" });
+      f.lagged.push({ t: NIGHT.laneLag, walker, bat });
+      f.car++; f.cars++;
+      if (++f.trainCar >= NIGHT.train) { f.trainCar = 0; f.rest = NIGHT.trainRest; }
+    }
+    if (f.car >= total && f.wave < NIGHT.waves.length - 1) { f.wave++; f.car = 0; f.clock = -NIGHT.waveGap; }
+    return out;
   }
+  static newField() { return { wave: 0, car: 0, cars: 0, clock: NIGHT.firstClock, rest: 0, trainCar: 0, lagged: [] }; }
 
   stop() { this.stopped = true; cancelAnimationFrame(this.raf); window.removeEventListener("keydown", this.kd); window.removeEventListener("keyup", this.ku); }
 
@@ -195,17 +199,17 @@ export class Night {
   }
 
   spawn() {
-    while (this.queue.length && this.queue[0].at <= this.clock && this.foes.length < NIGHT.maxOnScreen) {
-      const s = this.queue.shift();
-      const x = s.side === 0 ? TOWER_X + 2 : TOWER_X + 20 - 3;
-      const bat = s.kind === "bat";
-      this.foes.push({ kind: s.kind, side: s.side, x, y: bat ? FLOOR_ROWS[0] - 2.4 : FLOOR_ROWS[0] - 1, vx: 0, vy: 0,
+    const onField = this.foes.filter((f) => f.alive).length;
+    for (const sp of Night.fieldTick(this.field, onField)) {
+      const x = sp.side === 0 ? TOWER_X + 2 : TOWER_X + 20 - 3;
+      const bat = sp.kind === "bat";
+      // A walker stands on the roof row; a flyer appears three rows above it (GC spawnFieldFoe: surf − 4).
+      this.foes.push({ kind: sp.kind, side: sp.side, x, y: bat ? FLOOR_ROWS[0] - 4 : FLOOR_ROWS[0] - 1, vx: 0, vy: 0,
         alive: true, wp: 0, anim: (this.spawned * 7) % 16, trapped: 0 });
       this.spawned++;
     }
-    // The Py comes out once this share of the night has spawned (GC pyArrivalFraction, pressure beat 0.65).
-    // No "last minute" fallback on the web — founder 2026-10-06: the same as the app, no extra rule.
-    if (!this.py && this.spawned >= NIGHT.bodies * NIGHT.pyAt) this.bringPyOut();
+    // The Py comes out once pyAt of the left lane's cars have come (GC pyArrivalFraction, pressure beat 0.65).
+    if (!this.py && this.field.cars >= NIGHT.cars * NIGHT.pyAt) this.bringPyOut();
   }
 
   bringPyOut() {
@@ -232,16 +236,33 @@ export class Night {
       if (top !== null) { h.y = top - HERO.h; h.vy = 0; h.ground = true; } else h.ground = false;
     } else {
       h.ground = false;
-      // Head-butting a Bump Plank from below knocks off a walker standing on that tile (GC 4386-4422).
-      for (const row of [...FLOOR_ROWS, STEP_ROW]) {
-        if (oldTop >= row + 1 - 0.001 && h.y < row + 1) {
-          const col = Math.floor(h.x + HERO.w / 2);
-          if (solidAt(col, row)) {
-            this.fx.push({ kind: "bump", x: col, y: row, t: 8 });
-            for (const f of this.foes) if (f.alive && f.kind === "zombie" && Math.abs(f.y + 1 - row) < 0.2 && Math.abs(f.x + 0.5 - (col + 0.5)) < 0.9) this.kill(f, "hero");
-          }
-        }
-      }
+      this.platformBump(oldTop);
+    }
+  }
+
+  /** Head-butting a Bump Plank from below (GC platformBump): the walkers on it within bumpReach of the hero's middle go down; if one did,
+   *  or any walker stands on that run of planks, the hero hits its head and stays below. Only an empty plank lets the hero through. */
+  platformBump(oldTop) {
+    const h = this.hero;
+    if (!(h.y < oldTop)) return;
+    const cx = h.x + HERO.w / 2, col = Math.floor(cx);
+    const top = Math.floor(h.y), was = Math.floor(oldTop);
+    if (!(top < was)) return;
+    const bumpable = (c, r) => r !== GROUND && solidAt(c, r);
+    // A walker's body is x+0.1 … x+0.9 (0.8 wide), feet at y+1; the trapped ones can't fight (GC canFight).
+    const fights = (f) => f.alive && f.kind === "zombie" && !f.trapped;
+    for (let row = was - 1; row >= top; row--) {
+      if (!bumpable(col, row)) continue;
+      let x0 = col, x1 = col;
+      while (bumpable(x0 - 1, row)) x0--;
+      while (bumpable(x1 + 1, row)) x1++;
+      const onIt = (f) => fights(f) && Math.abs(f.y + 1 - row) < 0.4;
+      const guarded = this.foes.some((f) => onIt(f) && f.x + 0.9 > x0 && f.x + 0.1 < x1 + 1);
+      let hit = 0;
+      for (const f of this.foes) if (onIt(f) && Math.abs(f.x + 0.5 - cx) < BUMP_REACH) { this.kill(f, "hero"); hit++; }
+      for (let dx = -1; dx <= 1; dx++) this.fx.push({ kind: "bump", x: col + dx, y: row, t: 8 });
+      if (hit || guarded) { h.y = row + 1.02; h.vy = 0.08; }               // the head hits the plank — the hero stays below
+      return;
     }
   }
 
@@ -476,7 +497,7 @@ export class Night {
     const left = NIGHT.bodies - this.spawned + this.foes.filter((f) => f.alive).length;
     return { hearts: this.hero.hearts, left,
       pyDown: this.py && this.py.down ? Math.ceil(this.py.down / TPS) : null, pyShell: this.py && !this.py.down ? this.py.armor : null,
-      pyCountdown: this.py ? null : Math.max(0, Math.ceil(NIGHT.bodies * NIGHT.pyAt) - this.spawned) };
+      pyCountdown: this.py ? null : Math.max(0, PY_AFTER - this.spawned) };
   }
 
   // ---------------------------------------------------------------------------------- drawing
@@ -552,6 +573,14 @@ export class Night {
   }
 }
 
+/** Bodies out when the Py comes, as the trains run with room on screen — the HUD's countdown. */
+export const PY_AFTER = (() => {
+  const f = Night.newField();
+  let n = 0;
+  while (f.cars < NIGHT.cars * NIGHT.pyAt) n += Night.fieldTick(f, 0).length;
+  return n;
+})();
+
 // The replica's numbers, read by the conformance check (tools/night-conform) and compared with the engine's (night-tape spec).
-export const SPEC = { TPS, TOWER_X, W, TOP, PLAN, FLOOR_ROWS, GROUND, STEPS, STEP_ROW, TORCH_X, INWARD, NIGHT, HERO, FOE_SPEED, SEAL_WINDOW,
+export const SPEC = { TPS, TOWER_X, W, TOP, PLAN, FLOOR_ROWS, GROUND, STEPS, STEP_ROW, TORCH_X, INWARD, NIGHT, HERO, BUMP_REACH, FOE_SPEED, SEAL_WINDOW,
   PY_OUT_LIMIT, BALLOON_EVERY, BALLOON_FREEZE, PERCH_X, PERCH_Y, FIRST_BALLOON, POST_LEASH, PARTY, GUEST };
