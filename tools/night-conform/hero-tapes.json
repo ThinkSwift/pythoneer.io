@@ -1,0 +1,9 @@
+[
+  { "name": "stand",        "segments": [[30, 0, 0]] },
+  { "name": "run-right",    "segments": [[40, 1, 0]] },
+  { "name": "run-left",     "segments": [[40, -1, 0]] },
+  { "name": "jump",         "segments": [[1, 0, 1], [44, 0, 0]] },
+  { "name": "run-jump",     "segments": [[1, 1, 1], [45, 1, 0]] },
+  { "name": "step-then-floor", "segments": [[28, -1, 0], [1, 0, 1], [40, 0, 0], [1, 0, 1], [45, 0, 0]] },
+  { "name": "off-the-plate",   "segments": [[28, -1, 0], [1, 0, 1], [40, 0, 0], [12, -1, 0], [1, -1, 1], [30, 0, 0]] }
+]

@@ -551,3 +551,7 @@ export class Night {
     }
   }
 }
+
+// The replica's numbers, read by the conformance check (tools/night-conform) and compared with the engine's (night-tape spec).
+export const SPEC = { TPS, TOWER_X, W, TOP, PLAN, FLOOR_ROWS, GROUND, STEPS, STEP_ROW, TORCH_X, INWARD, NIGHT, HERO, FOE_SPEED, SEAL_WINDOW,
+  PY_OUT_LIMIT, BALLOON_EVERY, BALLOON_FREEZE, PERCH_X, PERCH_Y, FIRST_BALLOON, POST_LEASH, PARTY, GUEST };
