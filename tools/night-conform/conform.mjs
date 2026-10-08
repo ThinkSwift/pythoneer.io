@@ -55,9 +55,12 @@ row("walker speed", eng.ladder.patrolSpeed * 1.2 * 0.9 * eng.ladder.level, S.FOE
 row("flyer share of the mix", eng.ladder.mix.flyer / eng.ladder.bodies, S.NIGHT.flyerShare);
 
 // Party posts: the engine's members after they reach their posts vs the web's PARTY.
-const engParty = (eng.party || []).map((p) => ({ kind: p.kind, post: p.post, x: +p.x.toFixed(2), feet: +p.feet.toFixed(2) }));
-const webParty = S.PARTY.map((p) => ({ kind: "npc_" + p.role, post: [Math.floor(p.post - S.TOWER_X), S.GROUND - p.row], x: p.post - S.TOWER_X, feet: S.GROUND - p.row }));
-row("party (kind, post, x, feet)", engParty, webParty);
+// Members stand within 0.15 of the web's post (the engine centres the 0.8-wide body in its tile: x + 0.1).
+const engParty = (eng.party || []).map((p) => `${p.kind} x${Math.round(p.x * 10) / 10} feet${p.feet}`);
+const webParty = S.PARTY.map((p) => `npc_${p.role} x${Math.round((p.post - S.TOWER_X) * 10) / 10} feet${S.GROUND - p.row}`);
+const partyOk = (eng.party || []).length === S.PARTY.length && (eng.party || []).every((p, i) => p.kind === "npc_" + S.PARTY[i].role
+  && Math.abs(p.x - (S.PARTY[i].post - S.TOWER_X)) <= 0.15 && p.feet === S.GROUND - S.PARTY[i].row);
+rows.push({ item: "party posts (kind, x, feet)", engine: engParty, web: webParty, ok: partyOk, note: "x within 0.15" });
 
 // Spawns: the engine's (hero standing still, until the torch falls) vs the web's queue over the same span.
 const n = bare();
