@@ -15,6 +15,13 @@
   <meta property="og:description" content="Hold the tower. Bring the Py home.">
   <meta property="og:image" content="https://pythoneer.io/og.png">
   <link rel="stylesheet" href="/night/night.css">
+  <script>if (/[?&]embed=1/.test(location.search)) document.documentElement.classList.add("embed");</script>
+  <style>
+    /* inside pythoneer.io's home page: no header or footer of its own, no page colour */
+    html.embed, html.embed body { background: transparent; }
+    html.embed header.top, html.embed footer { display: none; }
+    html.embed .wrap { padding-top: 2px; }
+  </style>
 </head>
 <body>
   <div class="wrap">
@@ -78,5 +85,10 @@
   </div>
   <script type="module" src="/night/track.js"></script>
   <script type="module" src="/night/main.js"></script>
+  <script>
+    if (document.documentElement.classList.contains("embed") && window.parent !== window && window.ResizeObserver) {
+      new ResizeObserver(function () { parent.postMessage({ py: "height", h: document.documentElement.scrollHeight }, "*"); }).observe(document.body);
+    }
+  </script>
 </body>
 </html>

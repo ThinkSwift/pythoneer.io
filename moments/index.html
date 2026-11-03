@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Moments · Pythoneer</title>
+  <meta name="description" content="A whole new Pythoneer: a hand-made 2D world to explore, tower-defense nights with your party, and a home for everything you find. All 38 games are free.">
+  <meta name="theme-color" content="#0b0f1a">
+  <link rel="canonical" href="https://pythoneer.io/moments/">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png?v=20261103">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=20261103">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png?v=20261103">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=20261103">
+  <meta name="apple-itunes-app" content="app-id=6754533772">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Pythoneer">
+  <meta property="og:title" content="Pythoneer — Pixel Adventure, Tower Defense">
+  <meta property="og:description" content="A whole new Pythoneer: a hand-made 2D world to explore, tower-defense nights with your party, and a home for everything you find. All 38 games are free.">
+  <meta property="og:url" content="https://pythoneer.io/moments/">
+  <meta property="og:image" content="https://pythoneer.io/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[
+    {"@type":"WebSite","name":"Pythoneer","url":"https://pythoneer.io/","publisher":{"@type":"Organization","name":"Swiftian Inc.","url":"https://swiftian.com/"}},
+    {"@type":"SoftwareApplication","name":"Pythoneer: Make Your Own Game","operatingSystem":"iOS, iPadOS, macOS","applicationCategory":"GameApplication",
+     "url":"https://apps.apple.com/app/id6754533772","image":"https://pythoneer.io/icon-app.png",
+     "description":"One hand-built 2D world: explore it by day, hold the tower with your party by night, and catch the Py — each one carries a little arcade game that is then yours to play. 38 games, all free.",
+     "author":{"@type":"Organization","name":"Swiftian Inc.","url":"https://swiftian.com/"},
+     "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+  ]}
+  </script>
+  <style>
+    :root{--bg:#0b0f1a;--bg-2:#0e1422;--ink:#eef2ff;--muted:#9aa6c4;--line:rgba(255,255,255,.10);--ac:#4ade80;--ac-soft:rgba(74,222,128,.4)}
+    *{box-sizing:border-box} html,body{margin:0}
+    body{font-family:"Inter",-apple-system,system-ui,sans-serif;color:var(--ink);
+      background:radial-gradient(1100px 660px at 82% -12%, rgba(74,222,128,.13), transparent 60%),
+                 radial-gradient(900px 600px at 0% 8%, rgba(129,140,248,.10), transparent 55%),
+                 linear-gradient(180deg,var(--bg-2),var(--bg));
+      min-height:100vh;-webkit-font-smoothing:antialiased}
+    .wrap{position:relative;z-index:1;width:100%;max-width:760px;margin:0 auto;padding:0 22px}
+    nav{display:flex;align-items:center;gap:11px;padding:26px 0 8px}
+    nav img{width:32px;height:32px;border-radius:8px;display:block}
+    nav .name{font-family:"Space Grotesk";font-weight:700;font-size:18px;flex:1}
+    .lang-toggle{font-size:13px;font-weight:600;color:var(--muted);border:1px solid var(--line);background:none;
+      border-radius:999px;padding:7px 14px;cursor:pointer;font-family:inherit;transition:color .14s,border-color .14s}
+    .lang-toggle:hover{color:var(--ac);border-color:var(--ac-soft)}
+    .lang-toggle.hide{display:none}
+    .kicker{font-family:"Space Grotesk";font-weight:600;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:34px 0 10px}
+    h1{font-family:"Space Grotesk";font-weight:700;font-size:clamp(30px,5.8vw,46px);line-height:1.06;margin:0;letter-spacing:-1px;
+      background:linear-gradient(100deg,#fff 30%,var(--ac) 80%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .intro{color:var(--muted);font-size:clamp(15px,2.3vw,16.5px);line-height:1.65;margin:14px 0 0;max-width:600px}
+    .intro b{color:var(--ink);font-weight:600}
+
+    /* ── 세계 먼저 (founder 2026-10-14: 미니게임을 늘어놓지 말고 world의 재미를) ──
+       우주에서 심연까지 내려가는 한 컷, 그 아래 그 세계의 두 장면: 밤을 지키고, 파이를 잡는다. */
+    .world{margin:26px 0 0;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:#000;line-height:0}
+    .world video{width:100%;aspect-ratio:3840/1646;display:block;object-fit:cover}
+    .get{display:flex;align-items:center;gap:14px;margin:14px 2px 0}
+    .store-btn{flex:none;display:inline-flex;align-items:center;gap:9px;padding:7px 15px 7px 7px;border:1px solid var(--line);
+      border-radius:999px;color:var(--ink);text-decoration:none;font-weight:600;font-size:14px;transition:border-color .14s}
+    .store-btn img{width:28px;height:28px;border-radius:7px;display:block}
+    .store-btn:hover{border-color:var(--ac-soft)}
+    .free{font-size:12.5px;line-height:1.55;color:var(--muted);margin:0}
+    .moments{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:34px 0 0}
+    .moment{display:block;color:inherit;text-decoration:none}
+    .moment video{width:100%;aspect-ratio:3/2;display:block;object-fit:cover;border-radius:16px;border:1px solid var(--line);background:#000;
+      transition:border-color .14s}
+    a.moment:hover video{border-color:var(--ac-soft)}
+    .m-t{font-family:"Space Grotesk";font-weight:600;font-size:16px;margin:12px 2px 0}
+    .m-t .go{color:var(--ac);display:inline-block;transition:transform .14s}
+    a.moment:hover .go{transform:translateX(3px)}
+    .m-n{font-size:13.5px;line-height:1.55;color:var(--muted);margin:4px 2px 0}
+    @media (max-width:560px){ .get{flex-direction:column;align-items:flex-start} .moments{grid-template-columns:1fr} }
+
+    /* ── 새 버전 한 줄 ── */
+    .new{margin:34px 0 0;padding:16px 18px;border:1px solid var(--line);border-radius:16px;display:flex;gap:14px;align-items:flex-start}
+    .new .tag{flex:none;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);border:1px solid var(--ac-soft);border-radius:999px;padding:4px 9px;margin-top:2px}
+    .new p{margin:0;font-size:14px;line-height:1.6;color:var(--muted)}
+    .new p b{color:var(--ink);font-weight:600}
+    .kin{margin-top:14px;align-items:center}
+    .kin-icon{flex:none;line-height:0}
+    .kin-icon img{width:44px;height:44px;border-radius:11px;border:1px solid rgba(255,255,255,.10);box-shadow:0 4px 12px rgba(0,0,0,.35);transition:transform .13s}
+    .kin-icon:hover img{transform:translateY(-2px)}
+
+    .more{margin:46px 0 0;padding-top:22px;border-top:1px solid var(--line)}
+    .more h2{font-family:"Space Grotesk";font-weight:600;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+    .site-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:6px 0;font-size:14px}
+    .site-row a{color:var(--ac);text-decoration:none;font-weight:600;font-family:"Space Grotesk"}
+    .site-row a:hover{text-decoration:underline;text-underline-offset:3px}
+    .site-row .d{color:var(--muted)}
+    footer{position:relative;z-index:1;text-align:center;font-size:13px;padding:42px 22px 32px;color:var(--muted)}
+    footer a{color:var(--ac);text-decoration:none}
+    footer a:hover{text-decoration:underline;text-underline-offset:3px}
+    footer a.mail{display:inline-flex;vertical-align:-3px}
+    footer a.mail svg{width:15px;height:15px}
+    footer .sep{opacity:.35;margin:0 8px}
+    .v40{display:flex;gap:18px;align-items:flex-start}
+    .v40-preview{width:150px;flex:none;border-radius:16px;border:1px solid var(--line);background:#000}
+    .v40-review{color:var(--muted);font-size:13px;margin-top:8px}
+    .kin a[data-t="spLink"]{color:var(--ac);text-decoration:none;font-weight:600;white-space:nowrap}
+    @media (max-width:560px){ .v40{flex-direction:column;align-items:center} .v40-preview{width:62%} }
+  
+    /* pythoneer.io pages: tabs, the night in the page, App Store, two site buttons (founder 2026-11-03) */
+    nav.tabs-bar{display:flex;align-items:flex-end;gap:10px;padding:22px 0 0;border-bottom:1px solid rgba(255,255,255,.22)}
+    nav.tabs-bar img.brand{width:32px;height:32px;border-radius:8px;align-self:center;margin:0 4px 8px 0}
+    .tabs{display:flex;gap:6px}
+    .tab{min-width:118px;padding:10px 16px 9px;margin-bottom:-1px;text-align:center;text-decoration:none;color:var(--muted);
+      font:600 14px/1.2 "Space Grotesk","Inter",system-ui,sans-serif;background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.16);border-bottom:none;border-radius:10px 10px 0 0}
+    .tab:hover{color:var(--ink);border-color:rgba(238,242,255,.75)}
+    .tab[aria-current]{color:var(--ink);border-color:var(--ink);border-top-width:3px;padding-top:8px}
+    nav.tabs-bar .lang-toggle{margin:0 0 8px auto}
+    nav.tabs-bar + h1{margin-top:30px}
+    .night{margin:22px -6px 0}
+    .night iframe{display:block;width:100%;height:1100px;border:0;background:transparent;color-scheme:normal}
+    .store-row{display:flex;flex-direction:column;align-items:center;gap:10px;margin:34px 0 0;text-align:center}
+    .store-row .free{color:var(--muted);font-size:14px;line-height:1.55;max-width:520px;margin:0}
+    .appstore{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:8px 18px 8px 10px;border-radius:14px;
+      background:#000;color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.28)}
+    .appstore:hover{border-color:#fff}
+    .appstore img{border-radius:7px}
+    .appstore span{display:flex;flex-direction:column;line-height:1.05}
+    .appstore small{font-size:10.5px;opacity:.85}
+    .appstore b{font-size:19px;font-weight:600;letter-spacing:-.01em}
+    .sites{display:flex;flex-wrap:wrap;gap:8px;margin:44px 0 0;padding-top:22px;border-top:1px solid var(--line)}
+    .site{box-sizing:border-box;width:168px;min-height:42px;display:flex;align-items:center;gap:8px;padding:3px 10px 3px 3px;
+      color:#0b0f1a;text-decoration:none;font-size:13.5px;font-weight:500;background:#eef1f7;border:2px solid #eef1f7;border-radius:10px}
+    .site img{display:block;width:32px;height:32px;border-radius:6px;image-rendering:pixelated}
+    .site:hover{border-color:#0b0f1a}
+    .moments-page .world{margin-top:24px}
+    .moments-page .moment.link{cursor:default}
+    .preview{margin:26px 0 0;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:#000;line-height:0}
+    .preview video{width:100%;display:block}
+    @media (max-width:540px){
+      .tab{min-width:0;flex:1;padding:10px 6px 9px} .tabs{flex:1}
+      nav.tabs-bar{flex-wrap:wrap} nav.tabs-bar img.brand{order:-2;margin:0 auto 10px 0} nav.tabs-bar .lang-toggle{order:-1;margin:0 0 10px 0} .tabs{flex:1 1 calc(100% - 46px)}
+      .site{flex:1;width:auto}
+      .night{margin:18px -16px 0}
+    }
+</style>
+  <!-- family-ld:start -->
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "@id": "https://swiftian.com/#org", "name": "Swiftian Inc.", "url": "https://swiftian.com/", "logo": "https://swiftian.com/apple-touch-icon.png", "sameAs": ["https://pythoneer.io/", "https://spriteer.com/", "https://iflipbook.com/", "https://coordigo.com/"]}</script>
+  <!-- family-ld:end -->
+  </head>
+<body class="moments-page">
+  <div class="wrap">
+    <nav class="tabs-bar" aria-label="Pythoneer"><img src="/icon-app.png" alt="" class="brand"><div class="tabs"><a class="tab" href="/"><span>Pythoneer</span></a><a class="tab" href="/moments/" aria-current="page"><span>Moments</span></a></div><button class="lang-toggle hide" id="langToggle" type="button"></button></nav>
+    <h1 style="margin-top:28px">Moments</h1>
+
+    <figure class="world">
+      <video src="/media/world.mp4" poster="/media/world-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Pythoneer"></video>
+    </figure>
+    <section class="moments">
+      <a class="moment" href="/">
+        <video src="/media/night.mp4" poster="/media/night-poster.jpg" autoplay muted loop playsinline preload="metadata"></video>
+        <div class="m-t"><span data-t="nightTitle">Play one night</span> <span class="go" aria-hidden="true">&rarr;</span></div>
+        <div class="m-n" data-t="nightNote">Hold the tower, keep the swarm off the torch, bring the Py home — right in your browser.</div>
+      </a>
+      <div class="moment">
+        <video src="/media/catch.mp4" poster="/media/catch-poster.jpg" autoplay muted loop playsinline preload="metadata"></video>
+        <div class="m-t" data-t="catchTitle">Catch the Py</div>
+      </div>
+    </section>
+
+    <figure class="preview"><video src="/media/py40-preview.mp4" poster="/media/py40-poster.jpg" controls playsinline preload="metadata"></video></figure>
+    <div class="store-row"><a class="appstore" href="https://apps.apple.com/app/id6754533772?ct=web-py-moments" target="_blank" rel="noopener"><img src="/icon-app.png" width="32" height="32" alt=""><span><small>Download on the</small><b>App Store</b></span></a><p class="free" data-t="free">Free on iPhone, iPad and Mac — the whole world, all 38 games, every night. One purchase, The Portal, takes you from home back out to anywhere you've been.</p></div>
+    <section class="sites" aria-label="Also from Swiftian"><a class="site" href="https://spriteer.com/?ct=web-py-sp"><img src="/assets/links/spriteer-32.png" srcset="/assets/links/spriteer-32.png 1x, /assets/links/spriteer-64.png 2x, /assets/links/spriteer-96.png 3x" width="32" height="32" alt=""><span>spriteer.com</span></a><a class="site" href="https://swiftian.com/?ct=web-py-sw"><img src="/assets/links/swiftian-32.png" srcset="/assets/links/swiftian-32.png 1x, /assets/links/swiftian-64.png 2x, /assets/links/swiftian-96.png 3x" width="32" height="32" alt=""><span>swiftian.com</span></a></section>
+
+  </div>
+
+  <footer>
+    <span>&copy; 2026 Pythoneer &middot; <a href='https://swiftian.com'>Swiftian Inc.</a></span>
+    <span class="sep">&middot;</span><a href="https://www.youtube.com/@PythoneerIO">YouTube</a><span class="sep">&middot;</span><a href="/terms/">Terms</a><span class="sep">&middot;</span><a href="/privacy/" data-t="privacy">Privacy</a>
+    <span class="sep">&middot;</span>
+    <a class="mail email" data-u="hello" data-d="swiftian.com" href="#" aria-label="Email us" title="Email us">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>
+    </a>
+  </footer>
+
+  <script>
+  var EN = {
+  "intro": "Pythoneer is one hand-built world — sky islands, deep caves, a volcano at its heart. By day you explore it; by night your party holds the tower while you catch the Py. Every Py carries a little arcade game, and once it's caught, the game is yours to play.",
+  "free": "Free on iPhone, iPad and Mac — the whole world, all 38 games, every night. One purchase, The Portal, takes you from home back out to anywhere you've been.",
+  "spNote": "Draw an 8×8 fighter in Spriteer. It moves into your house here and meets you at the same duel machine.",
+  "spLink": "Try it on spriteer.com →",
+  "nightTitle": "Play one night",
+  "catchTitle": "Catch the Py",
+  "nightNote": "Hold the tower, keep the swarm off the torch, bring the Py home — right in your browser.",
+  "privacy": "Privacy"
+};
+  var I18N = {
+    "ko": {"name": "한국어", "intro": "Pythoneer는 손으로 지은 하나의 세계입니다 — 하늘 섬, 깊은 동굴, 그리고 한가운데의 화산. 낮에는 세계를 탐험하고, 밤에는 동료들이 탑을 지키는 동안 파이를 잡습니다. 파이마다 작은 아케이드 게임이 하나씩 들어 있어서, 잡고 나면 그 게임은 내 것이 됩니다.", "free": "iPhone·iPad·Mac에서 무료 — 세계 전체, 38개 게임 전부, 매일 밤. 구매는 단 하나, 포탈입니다. 집에서 가 본 곳 어디로든 다시 나갈 수 있습니다.", "spNote": "Spriteer에서 8×8 파이터를 그리세요. 그 파이터가 이 집에 이사 와서, 같은 결투 기계 앞에서 만납니다.", "spLink": "spriteer.com에서 해 보기 →", "nightTitle": "밤 한 판 하기", "nightNote": "탑을 지키고 떼를 횃불에서 막아 파이를 집으로 데려오세요 — 브라우저에서 바로.", "privacy": "개인정보 처리방침", "catchTitle": "파이 잡기"},
+    "ja": {"name": "日本語", "intro": "Pythoneerは、手づくりのひとつの世界。空の島、深い洞窟、そして中心には火山。昼は世界を探検し、夜は仲間が塔を守るあいだにPyを捕まえます。どのPyも小さなアーケードゲームを持っていて、捕まえればそのゲームはあなたのもの。", "free": "iPhone・iPad・Macで無料 — 世界のすべて、38のゲームすべて、毎晩。購入はひとつだけ、ポータル。家から、一度行った場所ならどこへでもまた出かけられます。", "spNote": "Spriteer で 8×8 のファイターを描こう。この家に引っ越してきて、同じ対決マシンで向き合います。", "spLink": "spriteer.com で試す →", "nightTitle": "一夜だけ遊ぶ", "nightNote": "塔を守り、群れを松明に近づけず、パイを家へ — ブラウザですぐに。", "privacy": "プライバシー", "catchTitle": "Pyを捕まえる"},
+    "zh-Hans": {"name": "简体中文", "intro": "Pythoneer 是一个手工打造的世界——天空岛、幽深的洞穴，中心是一座火山。白天你去探索；夜里伙伴们守住高塔，你去抓 Py。每只 Py 都带着一个小型街机游戏，抓到之后，这个游戏就归你玩了。", "free": "在 iPhone、iPad 和 Mac 上免费——整个世界、全部 38 个游戏、每一夜。唯一的购买是传送门：从家出发，回到你去过的任何地方。", "spNote": "在 Spriteer 里画一个 8×8 斗士。它会搬进这里的家，在同一台对决机前与你相遇。", "spLink": "在 spriteer.com 上试试 →", "nightTitle": "玩一夜", "nightNote": "守住高塔，别让怪群碰到火炬，把派带回家——就在浏览器里。", "privacy": "隐私政策", "catchTitle": "抓住 Py"},
+    "zh-Hant": {"name": "繁體中文", "intro": "Pythoneer 是一個手工打造的世界——天空島、幽深的洞穴，中心是一座火山。白天你去探索；夜裡夥伴們守住高塔，你去抓 Py。每隻 Py 都帶著一個小型街機遊戲，抓到之後，這個遊戲就歸你玩了。", "free": "在 iPhone、iPad 和 Mac 上免費——整個世界、全部 38 個遊戲、每一夜。唯一的購買是傳送門：從家出發，回到你去過的任何地方。", "spNote": "在 Spriteer 裡畫一個 8×8 鬥士。它會搬進這裡的家，在同一台對決機前與你相遇。", "spLink": "在 spriteer.com 上試試 →", "nightTitle": "玩一夜", "nightNote": "守住高塔，別讓怪群碰到火炬，把派帶回家——就在瀏覽器裡。", "privacy": "隱私權政策", "catchTitle": "抓住 Py"},
+    "es": {"name": "Español", "intro": "Pythoneer es un mundo hecho a mano: islas en el cielo, cuevas profundas y un volcán en el centro. De día lo exploras; de noche tus compañeros defienden la torre mientras tú atrapas al Py. Cada Py lleva dentro un pequeño juego arcade, y cuando lo atrapas, el juego es tuyo.", "free": "Gratis en iPhone, iPad y Mac: el mundo entero, los 38 juegos, todas las noches. Solo hay una compra, El portal, que te lleva de casa a cualquier lugar donde ya hayas estado.", "spNote": "Dibuja un luchador de 8×8 en Spriteer. Se muda a tu casa aquí y te espera en la misma máquina de duelos.", "spLink": "Pruébalo en spriteer.com →", "nightTitle": "Juega una noche", "nightNote": "Defiende la torre, aleja al enjambre de la antorcha y lleva al Py a casa, en tu navegador.", "privacy": "Privacidad", "catchTitle": "Atrapa al Py"},
+    "fr": {"name": "Français", "intro": "Pythoneer est un monde fait main : îles dans le ciel, grottes profondes et, en son cœur, un volcan. Le jour, vous l'explorez ; la nuit, vos compagnons tiennent la tour pendant que vous attrapez le Py. Chaque Py renferme un petit jeu d'arcade, et une fois le Py attrapé, ce jeu est à vous.", "free": "Gratuit sur iPhone, iPad et Mac : le monde entier, les 38 jeux, chaque nuit. Un seul achat : Le portail, qui vous ramène de chez vous partout où vous êtes déjà passé.", "spNote": "Dessine un combattant 8×8 dans Spriteer. Il emménage dans ta maison ici et t'attend à la même machine de duel.", "spLink": "Essaie sur spriteer.com →", "nightTitle": "Jouer une nuit", "nightNote": "Tenez la tour, éloignez la nuée de la torche et ramenez le Py chez vous — dans votre navigateur.", "privacy": "Confidentialité", "catchTitle": "Attrapez le Py"},
+    "de": {"name": "Deutsch", "intro": "Pythoneer ist eine handgebaute Welt — Himmelsinseln, tiefe Höhlen und ein Vulkan in ihrem Herzen. Tagsüber erkundest du sie; nachts halten deine Gefährten den Turm, während du den Py fängst. Jeder Py trägt ein kleines Arcade-Spiel in sich, und sobald du ihn gefangen hast, gehört das Spiel dir.", "free": "Kostenlos auf iPhone, iPad und Mac — die ganze Welt, alle 38 Spiele, jede Nacht. Es gibt nur einen Kauf: Das Portal bringt dich von zu Hause zurück an jeden Ort, an dem du schon warst.", "spNote": "Zeichne in Spriteer einen 8×8-Kämpfer. Er zieht hier in dein Haus und trifft dich an derselben Duellmaschine.", "spLink": "Auf spriteer.com ausprobieren →", "nightTitle": "Eine Nacht spielen", "nightNote": "Halte den Turm, halte den Schwarm von der Fackel fern und bring den Py nach Hause – direkt im Browser.", "privacy": "Datenschutz", "catchTitle": "Fang den Py"},
+    "pt": {"name": "Português", "intro": "Pythoneer é um mundo feito à mão — ilhas no céu, cavernas profundas e um vulcão no coração. De dia, você explora; à noite, seus companheiros defendem a torre enquanto você captura o Py. Cada Py traz um pequeno jogo de arcade e, depois de capturado, o jogo é seu.", "free": "Grátis no iPhone, iPad e Mac — o mundo inteiro, todos os 38 jogos, todas as noites. Uma única compra: O portal, que leva você de casa de volta a qualquer lugar onde já esteve.", "spNote": "Desenhe um lutador 8×8 no Spriteer. Ele se muda para a sua casa aqui e te encontra na mesma máquina de duelo.", "spLink": "Experimente em spriteer.com →", "nightTitle": "Jogue uma noite", "nightNote": "Segure a torre, afaste o enxame da tocha e leve o Py para casa — no seu navegador.", "privacy": "Privacidade", "catchTitle": "Capture o Py"},
+    "ru": {"name": "Русский", "intro": "Pythoneer — это мир, собранный вручную: небесные острова, глубокие пещеры и вулкан в самом сердце. Днём вы его исследуете, а ночью ваши спутники держат башню, пока вы ловите Py. Каждый Py несёт в себе маленькую аркадную игру — поймайте его, и игра ваша.", "free": "Бесплатно на iPhone, iPad и Mac — весь мир, все 38 игр, каждую ночь. Покупка всего одна — Портал: он переносит из дома в любое место, где вы уже побывали.", "spNote": "Нарисуй бойца 8×8 в Spriteer. Он переедет в твой дом здесь и встретит тебя у той же дуэльной машины.", "spLink": "Попробовать на spriteer.com →", "nightTitle": "Сыграйте одну ночь", "nightNote": "Удержите башню, не подпустите рой к факелу, приведите Пая домой — прямо в браузере.", "privacy": "Конфиденциальность", "catchTitle": "Поймайте Py"},
+    "it": {"name": "Italiano", "intro": "Pythoneer è un unico mondo fatto a mano: isole nel cielo, caverne profonde, un vulcano nel cuore. Di giorno lo esplori; di notte la tua squadra difende la torre mentre tu catturi il Py. Ogni Py porta con sé un piccolo gioco arcade, e una volta catturato, il gioco è tuo.", "free": "Gratis su iPhone, iPad e Mac — tutto il mondo, tutti i 38 giochi, ogni notte. Un solo acquisto, «Il portale», ti riporta da casa ovunque tu sia già stato.", "spNote": "Disegna un lottatore 8×8 in Spriteer. Si trasferisce nella tua casa qui e ti aspetta alla stessa macchina dei duelli.", "spLink": "Provalo su spriteer.com →", "nightTitle": "Gioca una notte", "nightNote": "Difendi la torre, tieni lo sciame lontano dalla torcia, riporta a casa il Py — direttamente nel browser.", "privacy": "Privacy", "catchTitle": "Cattura il Py"},
+    "nl": {"name": "Nederlands", "intro": "Pythoneer is één met de hand gebouwde wereld: eilanden in de lucht, diepe grotten, een vulkaan in het hart. Overdag ga je op verkenning; 's nachts houdt je groep de toren terwijl jij de Py vangt. Elke Py draagt een klein arcadespel bij zich, en zodra hij gevangen is, is dat spel van jou.", "free": "Gratis op iPhone, iPad en Mac — de hele wereld, alle 38 spellen, elke nacht. Eén aankoop, “Het portaal”, brengt je van huis terug naar elke plek waar je al bent geweest.", "spNote": "Teken een 8×8-vechter in Spriteer. Hij verhuist naar je huis hier en treft je bij dezelfde duelmachine.", "spLink": "Probeer het op spriteer.com →", "nightTitle": "Speel één nacht", "nightNote": "Houd de toren, houd de zwerm weg van de fakkel, breng de Py naar huis — gewoon in je browser.", "privacy": "Privacy", "catchTitle": "Vang de Py"},
+    "sv": {"name": "Svenska", "intro": "Pythoneer är en enda handbyggd värld: öar i himlen, djupa grottor, en vulkan i hjärtat. På dagen utforskar du den; på natten håller ditt sällskap tornet medan du fångar Py. Varje Py bär på ett litet arkadspel, och när den väl är fångad är spelet ditt.", "free": "Gratis på iPhone, iPad och Mac — hela världen, alla 38 spel, varje natt. Ett enda köp, Portalen, tar dig hemifrån tillbaka ut till varje plats du har varit på.", "spNote": "Rita en 8×8-kämpe i Spriteer. Den flyttar in i ditt hus här och möter dig vid samma duellmaskin.", "spLink": "Prova på spriteer.com →", "nightTitle": "Spela en natt", "nightNote": "Håll tornet, håll svärmen borta från facklan, för Py hem — direkt i webbläsaren.", "privacy": "Integritet", "catchTitle": "Fånga Py"},
+    "tr": {"name": "Türkçe", "intro": "Pythoneer elle yapılmış tek bir dünya: gökyüzü adaları, derin mağaralar, kalbinde bir yanardağ. Gündüz onu keşfedersiniz; gece ekibiniz kuleyi tutarken siz Py'ı yakalarsınız. Her Py küçük bir atari oyunu taşır ve yakaladığınız anda o oyun sizindir.", "free": "iPhone, iPad ve Mac'te ücretsiz — tüm dünya, 38 oyunun hepsi, her gece. Tek satın alma olan Portal, sizi evden daha önce gittiğiniz her yere geri götürür.", "spNote": "Spriteer'da 8×8 bir dövüşçü çiz. Buradaki evine taşınır ve seni aynı düello makinesinde karşılar.", "spLink": "spriteer.com'da dene →", "nightTitle": "Bir gece oynayın", "nightNote": "Kuleyi tutun, sürüyü meşaleden uzak tutun, Py'ı eve getirin — doğrudan tarayıcınızda.", "privacy": "Gizlilik", "catchTitle": "Py'ı yakalayın"},
+    "id": {"name": "Bahasa Indonesia", "intro": "Pythoneer adalah satu dunia yang dibangun dengan tangan: pulau di langit, gua yang dalam, gunung berapi di jantungnya. Siang hari Anda menjelajahinya; malam hari rombongan Anda menjaga menara selagi Anda menangkap Py. Setiap Py membawa satu game arkade kecil, dan begitu tertangkap, game itu milik Anda.", "free": "Gratis di iPhone, iPad, dan Mac — seluruh dunia, semua 38 game, setiap malam. Satu pembelian, Portal, membawa Anda dari rumah kembali ke mana pun yang pernah Anda datangi.", "spNote": "Gambar petarung 8×8 di Spriteer. Ia pindah ke rumahmu di sini dan menemuimu di mesin duel yang sama.", "spLink": "Coba di spriteer.com →", "nightTitle": "Mainkan satu malam", "nightNote": "Pertahankan menara, jauhkan kawanan dari obor, bawa Py pulang — langsung di browser Anda.", "privacy": "Privasi", "catchTitle": "Tangkap Py"},
+    "vi": {"name": "Tiếng Việt", "intro": "Pythoneer là một thế giới được dựng bằng tay: những hòn đảo trên trời, hang động sâu thẳm, một ngọn núi lửa ở trung tâm. Ban ngày bạn khám phá; ban đêm cả nhóm giữ tháp trong lúc bạn bắt Py. Mỗi Py mang theo một trò chơi arcade nhỏ, và khi đã bắt được, trò chơi đó là của bạn.", "free": "Miễn phí trên iPhone, iPad và Mac — cả thế giới, đủ 38 trò chơi, mọi đêm. Một lần mua duy nhất, Cổng dịch chuyển, đưa bạn từ nhà trở lại bất cứ nơi nào bạn từng đến.", "spNote": "Vẽ một chiến binh 8×8 trong Spriteer. Nó dọn vào nhà bạn ở đây và gặp bạn ở cùng cỗ máy đấu.", "spLink": "Thử trên spriteer.com →", "nightTitle": "Chơi một đêm", "nightNote": "Giữ tháp, đẩy bầy quái khỏi ngọn đuốc, đưa Py về nhà — ngay trên trình duyệt.", "privacy": "Quyền riêng tư", "catchTitle": "Bắt Py"},
+    "th": {"name": "ไทย", "intro": "Pythoneer คือโลกใบเดียวที่สร้างขึ้นด้วยมือ มีเกาะลอยฟ้า ถ้ำลึก และภูเขาไฟอยู่ใจกลาง กลางวันคุณออกสำรวจ กลางคืนเพื่อนร่วมทีมช่วยรักษาหอคอยไว้ ขณะที่คุณจับ Py ทุกตัวพกเกมอาร์เคดเล็ก ๆ มาหนึ่งเกม พอจับได้แล้ว เกมนั้นก็เป็นของคุณ", "free": "เล่นฟรีบน iPhone, iPad และ Mac — ทั้งโลก ครบทั้ง 38 เกม ทุกคืน ซื้อเพียงอย่างเดียวคือ “ประตูมิติ” ที่พาคุณจากบ้านกลับออกไปยังทุกที่ที่เคยไปมา", "spNote": "วาดนักสู้ขนาด 8×8 ใน Spriteer แล้วมันจะย้ายเข้าบ้านของคุณที่นี่ และมาเจอคุณที่เครื่องดวลเครื่องเดียวกัน", "spLink": "ลองที่ spriteer.com →", "nightTitle": "เล่นหนึ่งคืน", "nightNote": "รักษาหอคอยไว้ กันฝูงศัตรูให้ห่างจากคบเพลิง พาไพกลับบ้าน — เล่นได้ในเบราว์เซอร์เลย", "privacy": "ความเป็นส่วนตัว", "catchTitle": "จับ Py"},
+    "hi": {"name": "हिन्दी", "intro": "Pythoneer हाथ से गढ़ी गई एक दुनिया है — आसमानी द्वीप, गहरी गुफाएँ, और बीच में एक ज्वालामुखी। दिन में आप इसे खोजते हैं; रात में आपकी टोली मीनार सँभालती है और आप Py को पकड़ते हैं। हर Py अपने साथ एक छोटा आर्केड गेम लाता है, और पकड़ में आते ही वह गेम आपका हो जाता है।", "free": "iPhone, iPad और Mac पर मुफ़्त — पूरी दुनिया, सभी 38 गेम, हर रात। बस एक ख़रीद, पोर्टल, आपको घर से वापस हर उस जगह ले जाती है जहाँ आप जा चुके हैं।", "spNote": "Spriteer में 8×8 योद्धा बनाइए। वह यहाँ आपके घर में आ बसता है और उसी मुक़ाबला मशीन पर आपसे मिलता है।", "spLink": "spriteer.com पर आज़माएँ →", "nightTitle": "एक रात खेलिए", "nightNote": "मीनार थामे रखिए, झुंड को मशाल से दूर रखिए, पाई को घर ले आइए — सीधे अपने ब्राउज़र में।", "privacy": "गोपनीयता", "catchTitle": "Py को पकड़िए"},
+    "ar": {"name": "العربية", "intro": "Pythoneer عالم واحد مصنوع باليد — جزر في السماء، وكهوف عميقة، وبركان في قلبه. في النهار تستكشفه، وفي الليل يحمي رفاقك البرج بينما تصطاد Py. كل Py يحمل لعبة أركيد صغيرة، وما إن تمسك به حتى تصبح اللعبة لك.", "free": "مجاني على iPhone وiPad وMac — العالم كله، والألعاب الـ38 جميعها، كل ليلة. وشراء واحد فقط، البوابة، يعيدك من البيت إلى أي مكان زرته من قبل.", "spNote": "ارسم مقاتلًا بحجم 8×8 في Spriteer. سينتقل إلى بيتك هنا ويلاقيك عند آلة المبارزة نفسها.", "spLink": "جرّبه على spriteer.com ←", "nightTitle": "العب ليلة واحدة", "nightNote": "احمِ البرج، وأبعد السرب عن الشعلة، وأعِد الباي إلى البيت — في متصفحك مباشرة.", "privacy": "الخصوصية", "catchTitle": "اصطد Py"}
+  };
+  function detect(){
+    var langs = navigator.languages || [navigator.language || "en"];
+    for (var i=0;i<langs.length;i++){
+      var l = langs[i], two = l.slice(0,2).toLowerCase();
+      if (two === "en") return "en";
+      if (/^zh\b/.test(l)) return /tw|hk|mo|hant/i.test(l) ? "zh-Hant" : "zh-Hans";
+      if (I18N[two]) return two;
+    }
+    return "en";
+  }
+  // ── 언어 상태는 단 두 값: cur(지금 보는 언어)와 alt(이 방문자의 '자기 언어', 항상 en 이 아님) ──
+  // alt 는 ①?lang= 전달 ②과거 선택(저장) ③브라우저 감지 순으로 정해지고, 토글은 en ⇄ alt 만 오간다.
+  var alt = null, cur = "en", saved = null, savedAlt = null;
+  try { saved = localStorage.getItem("site_lang"); savedAlt = localStorage.getItem("site_lang_alt"); } catch(_){}
+  if (I18N[savedAlt]) alt = savedAlt;
+  var det = detect();
+  if (!alt && det !== "en" && I18N[det]) alt = det;
+  cur = (saved === "en") ? "en" : (I18N[saved] ? saved : (alt || "en"));
+  try {
+    var q = new URLSearchParams(location.search).get("lang");
+    if (q === "en") cur = "en";
+    else if (I18N[q]) { alt = q; cur = q; }
+  } catch(_){}
+  // A language page (/ja/, /ko/ …, written by ops web/locale-pages.py) names its language; it wins over saved and detected.
+  var PAGE = document.documentElement.getAttribute("data-lang");
+  if (PAGE && I18N[PAGE]) { alt = PAGE; cur = PAGE; }
+  if (cur !== "en" && cur !== alt) alt = cur;   // 불변식: cur 은 en 아니면 alt 다
+
+  var FAMILY = /^(swiftian\.com|iflipbook\.com|pythoneer\.io|coordigo\.com|spriteer\.com)$/;
+  function carryLang(){
+    document.querySelectorAll('a[href^="https://"]').forEach(function(a){
+      if (!FAMILY.test(a.hostname)) return;
+      try {
+        var u = new URL(a.href);
+        if (cur === "en" && !alt) u.searchParams.delete("lang");
+        else u.searchParams.set("lang", cur);
+        a.href = u.toString();
+      } catch(_){}
+    });
+  }
+  function dict(){ return (cur === "en") ? EN : I18N[cur]; }
+  function apply(lang){
+    cur = (lang === "en" || !I18N[lang]) ? "en" : lang;
+    if (cur !== "en") alt = cur;
+    try {
+      localStorage.setItem("site_lang", cur);
+      if (alt) localStorage.setItem("site_lang_alt", alt);
+    } catch(_){}
+    var d = dict();
+    document.querySelectorAll("[data-t]").forEach(function(el){
+      var k = el.getAttribute("data-t");
+      if (d[k]) el.textContent = d[k];
+    });
+    document.documentElement.lang = cur;
+    document.documentElement.dir = cur === "ar" ? "rtl" : "ltr";
+    var btn = document.getElementById("langToggle");
+    if (!alt){ btn.classList.add("hide"); }
+    else {
+      btn.classList.remove("hide");
+      btn.textContent = (cur === "en") ? I18N[alt].name : "English";
+    }
+    carryLang();
+  }
+  document.getElementById("langToggle").addEventListener("click", function(){ apply(cur === "en" ? alt : "en"); });
+
+  apply(cur);
+  document.querySelectorAll('a.email').forEach(function(a){
+    a.href = 'mailto:' + a.dataset.u + String.fromCharCode(64) + a.dataset.d;
+  });
+  </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "700711703b78414e9a5b9fd4ec5ba89a"}'></script>
+<script>
+(function () {
+  var SITE = "pythoneer.io";
+  function sid() {
+    try {
+      var k = "sw_sid", v = sessionStorage.getItem(k);
+      if (!v) { v = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2)); sessionStorage.setItem(k, v); }
+      return v;
+    } catch (_) { return "anon"; }
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target && e.target.closest && e.target.closest('a[href*="apps.apple.com"]');
+    if (!a) return;
+    var m = a.href.match(/id(\d+)/);
+    try {
+      fetch("https://claude-proxy-web.ilbulyori.workers.dev/events", {
+        method: "POST", keepalive: true,
+        headers: { "content-type": "application/json", "x-device-id": sid() },
+        body: JSON.stringify({
+          meta: { app: SITE, build: "web", os: "web", locale: (navigator.language || "").slice(0, 8) },
+          events: [{ name: "appstore_click", ts: Date.now() / 1000,
+            props: { site: SITE, app: m ? m[1] : "", path: location.pathname.slice(0, 64) } }]
+        })
+      }).catch(function () {});
+    } catch (_) {}
+  }, true);
+})();
+</script>
+</body>
+</html>

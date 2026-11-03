@@ -104,7 +104,45 @@
     .v40-review{color:var(--muted);font-size:13px;margin-top:8px}
     .kin a[data-t="spLink"]{color:var(--ac);text-decoration:none;font-weight:600;white-space:nowrap}
     @media (max-width:560px){ .v40{flex-direction:column;align-items:center} .v40-preview{width:62%} }
-  </style>
+  
+    /* pythoneer.io pages: tabs, the night in the page, App Store, two site buttons (founder 2026-11-03) */
+    nav.tabs-bar{display:flex;align-items:flex-end;gap:10px;padding:22px 0 0;border-bottom:1px solid rgba(255,255,255,.22)}
+    nav.tabs-bar img.brand{width:32px;height:32px;border-radius:8px;align-self:center;margin:0 4px 8px 0}
+    .tabs{display:flex;gap:6px}
+    .tab{min-width:118px;padding:10px 16px 9px;margin-bottom:-1px;text-align:center;text-decoration:none;color:var(--muted);
+      font:600 14px/1.2 "Space Grotesk","Inter",system-ui,sans-serif;background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.16);border-bottom:none;border-radius:10px 10px 0 0}
+    .tab:hover{color:var(--ink);border-color:rgba(238,242,255,.75)}
+    .tab[aria-current]{color:var(--ink);border-color:var(--ink);border-top-width:3px;padding-top:8px}
+    nav.tabs-bar .lang-toggle{margin:0 0 8px auto}
+    nav.tabs-bar + h1{margin-top:30px}
+    .night{margin:22px -6px 0}
+    .night iframe{display:block;width:100%;height:1100px;border:0;background:transparent;color-scheme:normal}
+    .store-row{display:flex;flex-direction:column;align-items:center;gap:10px;margin:34px 0 0;text-align:center}
+    .store-row .free{color:var(--muted);font-size:14px;line-height:1.55;max-width:520px;margin:0}
+    .appstore{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:8px 18px 8px 10px;border-radius:14px;
+      background:#000;color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.28)}
+    .appstore:hover{border-color:#fff}
+    .appstore img{border-radius:7px}
+    .appstore span{display:flex;flex-direction:column;line-height:1.05}
+    .appstore small{font-size:10.5px;opacity:.85}
+    .appstore b{font-size:19px;font-weight:600;letter-spacing:-.01em}
+    .sites{display:flex;flex-wrap:wrap;gap:8px;margin:44px 0 0;padding-top:22px;border-top:1px solid var(--line)}
+    .site{box-sizing:border-box;width:168px;min-height:42px;display:flex;align-items:center;gap:8px;padding:3px 10px 3px 3px;
+      color:#0b0f1a;text-decoration:none;font-size:13.5px;font-weight:500;background:#eef1f7;border:2px solid #eef1f7;border-radius:10px}
+    .site img{display:block;width:32px;height:32px;border-radius:6px;image-rendering:pixelated}
+    .site:hover{border-color:#0b0f1a}
+    .moments-page .world{margin-top:24px}
+    .moments-page .moment.link{cursor:default}
+    .preview{margin:26px 0 0;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:#000;line-height:0}
+    .preview video{width:100%;display:block}
+    @media (max-width:540px){
+      .tab{min-width:0;flex:1;padding:10px 6px 9px} .tabs{flex:1}
+      nav.tabs-bar{flex-wrap:wrap} nav.tabs-bar img.brand{order:-2;margin:0 auto 10px 0} nav.tabs-bar .lang-toggle{order:-1;margin:0 0 10px 0} .tabs{flex:1 1 calc(100% - 46px)}
+      .site{flex:1;width:auto}
+      .night{margin:18px -16px 0}
+    }
+</style>
   <!-- family-ld:start -->
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "@id": "https://swiftian.com/#org", "name": "Swiftian Inc.", "url": "https://swiftian.com/", "logo": "https://swiftian.com/apple-touch-icon.png", "sameAs": ["https://pythoneer.io/", "https://spriteer.com/", "https://iflipbook.com/", "https://coordigo.com/"]}</script>
   <!-- family-ld:end -->
@@ -133,38 +171,15 @@
 </head>
 <body>
   <div class="wrap">
-    <nav>
-      <img src="/icon-app.png" alt="Pythoneer">
-      <span class="name">Pythoneer</span>
-      <button class="lang-toggle hide" id="langToggle" type="button"></button>
-    </nav>
+    <nav class="tabs-bar" aria-label="Pythoneer"><img src="/icon-app.png" alt="" class="brand"><div class="tabs"><a class="tab" href="/" aria-current="page"><span>Pythoneer</span></a><a class="tab" href="/moments/"><span>Moments</span></a></div><button class="lang-toggle hide" id="langToggle" type="button"></button></nav>
     <h1>One Tile at a Time</h1>
     <p class="intro" data-t="intro">Pythoneer 是一个手工打造的世界——天空岛、幽深的洞穴，中心是一座火山。白天你去探索；夜里伙伴们守住高塔，你去抓 Py。每只 Py 都带着一个小型街机游戏，抓到之后，这个游戏就归你玩了。</p>
 
-    <figure class="world">
-      <video src="/media/world.mp4" poster="/media/world-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Pythoneer"></video>
-    </figure>
-    <div class="get">
-      <a class="store-btn" href="https://apps.apple.com/app/id6754533772?ct=web-pythoneer" target="_blank" rel="noopener"><img src="/icon-app.png" alt="" width="28" height="28">App Store</a>
-      <p class="free" data-t="free">在 iPhone、iPad 和 Mac 上免费——整个世界、全部 38 个游戏、每一夜。唯一的购买是传送门：从家出发，回到你去过的任何地方。</p>
-    </div>
-
-    <section class="moments">
-      <a class="moment" href="/night/">
-        <video src="/media/night.mp4" poster="/media/night-poster.jpg" autoplay muted loop playsinline preload="metadata"></video>
-        <div class="m-t"><span data-t="nightTitle">玩一夜</span> <span class="go" aria-hidden="true">&rarr;</span></div>
-        <div class="m-n" data-t="nightNote">守住高塔，别让怪群碰到火炬，把派带回家——就在浏览器里。</div>
-      </a>
-      <div class="moment">
-        <video src="/media/catch.mp4" poster="/media/catch-poster.jpg" autoplay muted loop playsinline preload="metadata"></video>
-        <div class="m-t" data-t="catchTitle">抓住 Py</div>
-      </div>
+    <section class="night" aria-label="One night">
+      <iframe id="night" src="/night/?embed=1" title="Pythoneer — one night" allow="autoplay"></iframe>
     </section>
-
-    <section class="new kin">
-      <a class="kin-icon" href="https://spriteer.com/zh-hans/?ct=web-py-sp" aria-label="Spriteer"><img src="/icon-spriteer.png" alt="Spriteer" width="44" height="44"></a>
-      <p><b>Spriteer</b> · <span data-t="spNote">在 Spriteer 里画一个 8×8 斗士。它会搬进这里的家，在同一台对决机前与你相遇。</span> <a href="https://spriteer.com/zh-hans/?ct=web-py-sp" data-t="spLink">在 spriteer.com 上试试 →</a></p>
-    </section>
+    <div class="store-row"><a class="appstore" href="https://apps.apple.com/app/id6754533772?ct=web-py-home" target="_blank" rel="noopener"><img src="/icon-app.png" width="32" height="32" alt=""><span><small>Download on the</small><b>App Store</b></span></a><p class="free" data-t="free">在 iPhone、iPad 和 Mac 上免费——整个世界、全部 38 个游戏、每一夜。唯一的购买是传送门：从家出发，回到你去过的任何地方。</p></div>
+    <section class="sites" aria-label="Also from Swiftian"><a class="site" href="https://spriteer.com/?ct=web-py-sp"><img src="/assets/links/spriteer-32.png" srcset="/assets/links/spriteer-32.png 1x, /assets/links/spriteer-64.png 2x, /assets/links/spriteer-96.png 3x" width="32" height="32" alt=""><span>spriteer.com</span></a><a class="site" href="https://swiftian.com/?ct=web-py-sw"><img src="/assets/links/swiftian-32.png" srcset="/assets/links/swiftian-32.png 1x, /assets/links/swiftian-64.png 2x, /assets/links/swiftian-96.png 3x" width="32" height="32" alt=""><span>swiftian.com</span></a></section>
 
   </div>
 
@@ -306,6 +321,18 @@
     } catch (_) {}
   }, true);
 })();
+</script>
+<script>
+  // the night sits in the page at its own height, so the page, not the frame, scrolls (same site: read it directly)
+  (function () {
+    var f = document.getElementById("night"); if (!f) return;
+    function fit() { try { var b = f.contentDocument.body; f.style.height = Math.ceil(b.getBoundingClientRect().height + 24) + "px"; } catch (_) {} }
+    f.addEventListener("load", function () {
+      fit();
+      try { new ResizeObserver(fit).observe(f.contentDocument.body); } catch (_) {}
+    });
+    addEventListener("message", function (e) { if (e.source === f.contentWindow && e.data && e.data.py === "height") fit(); });
+  })();
 </script>
 </body>
 </html>

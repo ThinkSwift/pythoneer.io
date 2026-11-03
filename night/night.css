@@ -96,3 +96,12 @@ footer { color: var(--ink-soft); font-size: 13px; padding: 24px 0 40px; display:
 .cover h2 { color: #fff; }
 .cover p { margin: 0; color: rgba(255,255,255,0.8); }
 .result-art { width: 96px; height: 96px; image-rendering: pixelated; }
+
+/* a phone: the stage is short, so the cover's words shrink and stay inside it (2026-11-03: the Korean intro overflowed onto the HUD) */
+@media (max-width: 520px) {
+  .cover { gap: 6px; padding: 8px 10px; overflow: hidden; }
+  .cover h2 { font-size: 16px; margin: 0; line-height: 1.2; }
+  .cover p { font-size: 12.5px; line-height: 1.35; }
+  .cover .btn, .cover button { padding: 8px 12px; font-size: 14px; }
+  .cover .result-art { width: 44px; height: 44px; }
+}
