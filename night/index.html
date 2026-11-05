@@ -28,7 +28,7 @@
     <header class="top">
       <img src="/icon-app.png" alt="" width="36" height="36">
       <a class="brand" href="/" style="color:inherit;text-decoration:none">Pythoneer</a>
-      <a class="btn gold store" data-store="web-py-night" href="https://apps.apple.com/app/id6754533772" target="_blank" rel="noopener" data-i18n="get_app">Get the app</a>
+      <a class="btn gold store" data-store="web-py-night" href="https://apps.apple.com/app/id6754533772?ct=web-py-night" target="_blank" rel="noopener" data-i18n="get_app">Get the app</a>
     </header>
 
     <section class="panel">
@@ -73,7 +73,7 @@
         <a id="to-sp" class="btn ghost" href="https://spriteer.com/?ct=py-house" data-i18n="visit">Visit</a>
       </div>
       <div class="row" style="margin-top:14px">
-        <a class="btn gold" data-store="web-py-house" href="https://apps.apple.com/app/id6754533772" target="_blank" rel="noopener" data-i18n="all_nights">Play all 38 nights in the app</a>
+        <a class="btn gold" data-store="web-py-house" href="https://apps.apple.com/app/id6754533772?ct=web-py-house" target="_blank" rel="noopener" data-i18n="all_nights">Play all 38 nights in the app</a>
       </div>
     </section>
 
@@ -88,6 +88,13 @@
   <script>
     if (document.documentElement.classList.contains("embed") && window.parent !== window && window.ResizeObserver) {
       new ResizeObserver(function () { parent.postMessage({ py: "height", h: document.documentElement.scrollHeight }, "*"); }).observe(document.body);
+    }
+  </script>
+  <script>
+    // Visits: the beacon only when the night is the page itself — inside the home page's frame the home page counts it
+    if (window.parent === window) {
+      var b = document.createElement("script"); b.defer = true; b.src = "https://static.cloudflareinsights.com/beacon.min.js";
+      b.setAttribute("data-cf-beacon", '{"token": "700711703b78414e9a5b9fd4ec5ba89a"}'); document.body.appendChild(b);
     }
   </script>
 </body>
